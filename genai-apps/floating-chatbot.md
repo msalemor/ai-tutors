@@ -17,15 +17,11 @@ This tutorial showcases how to add a floating AI chatbot to an existing applicat
 - This screenshot shows a chatbot conversation:
 ![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-1.png?raw=true)
 
- The main files are:
+ The main files and features are:
 
 1. `src/App.tsx`: This simulates the landing page.
 2. `src/components/floatingbot.tsx`: This is a react component with the main floating chatbot functionality.
-3. `src/services/chatbotservice.tsx`: This is a service to call OpenAI from the frontend while maintaining history.
-
-### 1.2 - Features
-
-The site displays the landing page. This could be an e-retail, informational, blog, or any other application.
+3. `src/services/chatbotservice.tsx`: This is a service to call OpenAI using `axios` from the frontend while maintaining history. This file also includes a trimmer function. The trimmer function is used to manage the conversation history.
 
 ### 1.3 - Installation Instructions
 
@@ -40,7 +36,7 @@ VITE_API_KEY=<API_KEY>
 
 ## 2.0 - React/TailwindCSS Application Frontend
 
-### 2.1 - Required Packages
+### 2.1 - NPM Packages
 
 Beside the React core packages, the application relies on:
 
