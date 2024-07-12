@@ -9,7 +9,9 @@
 
 ### 1.1 - Overview
 
-This tutorial showcases how to add a floating AI chatbot to an existing application. All the code is React frontend code.
+This comprehensive tutorial is designed to walk you through the seamless integration of an interactive AI chatbot that hovers within your existing application. By leveraging the powerful combination of React for the user interface and TailwindCSS for styling, you'll learn how to enhance your application's functionality with a sophisticated chatbot feature.
+
+Please note that the instructions outlined in this guide are intended for educational purposes and to demonstrate the process of embedding a floating chatbot. They are not optimized for deployment in a live production environment. As you follow along, you'll gain valuable insights into the intricacies of chatbot implementation, preparing you to customize and scale the feature for your specific production needs in the future.
 
 - This screenshot shows the floating chatbot activation button:
 ![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-0.png?raw=true?raw=true)
@@ -17,11 +19,15 @@ This tutorial showcases how to add a floating AI chatbot to an existing applicat
 - This screenshot shows a chatbot conversation:
 ![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-1.png?raw=true)
 
- The main files and features are:
+The main files and features are:
 
-1. `src/App.tsx`: This simulates the landing page.
-2. `src/components/floatingbot.tsx`: This is a react component with the main floating chatbot functionality.
-3. `src/services/chatbotservice.tsx`: This is a service to call OpenAI using `axios` from the frontend while maintaining history. This file also includes a trimmer function. The trimmer function is used to manage the conversation history.
+1. `src/App.tsx`: Acts as the mockup for the homepage where the chatbot will appear.
+2. `src/components/floatingbot.tsx`: Contains the React component that powers the core features of the floating chatbot.
+3. `src/services/chatbotservice.tsx`: Defines a service that leverages axios to interact with OpenAI directly from the frontend, and also manages the chat history. Additionally, this file contains a 'trimmer' function designed to keep the conversation history concise and relevant.
+
+#### References
+
+- [Full source code](https://github.com/msalemor/floating-chatbot)
 
 ### 1.3 - Installation Instructions
 
