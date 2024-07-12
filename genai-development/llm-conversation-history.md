@@ -9,13 +9,15 @@
 
 ### 1.1 - Chat completion API
 
-Generally, a chat model, like OpenAI GPT4, can keep a conversation history. Calling a model involves passing one or more messages that container a role and the content. A chat model generally implements three roles:
+Generally, a chat model, like OpenAI GPT4, can keep a conversation history. Calling a model involves passing one or more messages that contain a role and the content. 
+
+A chat model generally implements three roles:
 
 - **`system`**: Sets the context and instructions for the conversation, guiding the behavior of the model.
 - **`user`**: Represents the human user, providing queries or prompts to which the model responds.
 - **`assistant`**: The model itself, responding to the user's input based on the context set by the system.
 
-The roles help the system to understand the structure of the conversation.
+These roles help the system to understand the structure of the conversation.
 
 Imagine a user is accessing a travel assistant bot and asks, "What are some restaurants in London?" and after receiving the response, the user asks, "what are some more?" How would the system know that the user is refererring to restaurants in London? The answer is in keeping the conversation history which may endup looking something like the code in section 1.1.1.
 
@@ -294,3 +296,70 @@ if __name__ == "__main__":
     uvicorn.run(app)
 ```
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/chatbot-fastapi.py)
+
+##### 1.5.2 - LLM messages trimmer function
+
+```typescript
+export interface IMessage {
+    role: string
+    content: string
+}
+
+export function trimmer(messages: IMessage[],
+    keepSystemMessage: boolean = true,
+    history: number = 2) {
+
+    if (!messages || messages.length === 0)
+        return []
+
+    const final = []
+
+    // There should only be one system message, but just in case
+    const systemMessage = messages.filter(message => message.role === 'system')[0]
+
+    // Add the system message from the messages
+    if (keepSystemMessage && systemMessage)
+        final.push(systemMessage)
+
+    // Keep 2 * history messages from the bottom
+    if (messages.length > 2 * history + 1 + (systemMessage ? 1 : 0)) {
+        const start = messages.length - 2 * history - 1
+        for (let i = start; i < messages.length; i++) {
+            final.push(messages[i])
+        }
+        return final
+    }
+    else
+        // if it is small return all the messages
+        return messages
+}
+```
+
+##### 1.5.2 - Calling an LLM with a trimmer function
+
+```Typescript
+import axios from "axios";
+
+const config = {
+    headers: {
+        'Content-Type': 'application/json',
+        'api-key': 'API_KEY'
+    }
+}
+
+const OPENAI_URI = 'https://api.openai.com/v1/engines/davinci-codex/completions'
+
+export async function chatbotService(messages: IMessage[]) {
+    try {
+        const payload = {
+            messages: trimmer(messages),
+            temperature: 0.1,
+        }
+        const resp = await axios.post(OPENAI_URI, payload, config)
+        return resp.data
+    }
+    catch (error) {
+        console.error(error)
+    }
+}
+```
