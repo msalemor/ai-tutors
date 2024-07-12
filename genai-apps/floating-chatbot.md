@@ -4,6 +4,7 @@
 
 - [OpenAI Development Intro](https://genaitutor.am2703.com/?content=genai-intro)
 - [OpenAI Development Intermediate](https://genaitutor.am2703.com/?content=genai-intermediate)
+- [LLM Conversation History](https://genaitutor.am2703.com/?content=llm-conversation-history)
 
 ## 1.0 - Adding a Floating Chatbot To Your Site
 
@@ -16,7 +17,7 @@ Please note that the instructions outlined in this guide are intended for educat
 - This screenshot shows the floating chatbot activation button:
 ![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-0.png?raw=true?raw=true)
 
-- This screenshot shows a chatbot conversation:
+- This screenshot shows a chatbot conversation while maintaining the conversation history:
 ![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-1.png?raw=true)
 
 The main files and features are:
