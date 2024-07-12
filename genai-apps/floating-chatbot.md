@@ -9,9 +9,9 @@
 
 ### 1.1 - Overview
 
-![Screenshot](https://raw.githubusercontent.com/msalemor/ai-tutors/main/genai-apps/images/floating-chatbot-0.png)
+![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-1.png?raw=true?raw=true)
 
-![Screenshot](https://raw.githubusercontent.com/msalemor/ai-tutors/main/genai-apps/images/floating-chatbot-1.png)
+![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-1.png?raw=true)
 
 This tutorial showcases how to add a floating AI chatbot to an existing application. All the code is React frontend code. The main files are:
 
