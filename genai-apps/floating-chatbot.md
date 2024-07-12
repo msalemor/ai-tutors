@@ -9,7 +9,7 @@
 
 ### 1.1 - Overview
 
-![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-1.png?raw=true?raw=true)
+![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-0.png?raw=true?raw=true)
 
 ![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-1.png?raw=true)
 
