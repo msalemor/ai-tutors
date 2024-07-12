@@ -1,11 +1,11 @@
-# Floating Chatbot
+# Adding a Floating Chatbot To Your Site
 
 #### Related
 
 - [OpenAI Development Intro](https://genaitutor.am2703.com/?content=genai-intro)
 - [OpenAI Development Intermediate](https://genaitutor.am2703.com/?content=genai-intermediate)
 
-## 1.0 - Floating Chatbot
+## 1.0 - Adding a Floating Chatbot To Your Site
 
 ### 1.1 - Overview
 
