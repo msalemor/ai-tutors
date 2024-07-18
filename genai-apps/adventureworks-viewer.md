@@ -115,7 +115,7 @@ The backend Python Fast API. It exposes the basic application functionality incl
 
 #### Code
 
-##### 2.1.1 - Fast API backend
+##### 2.1.1 - Fast API Python backend
 
 ```python
 import logging
@@ -212,7 +212,9 @@ def chatbot(request: ChatRequest):
 # endregion
 ```
 
-### 2.2 - Frontend
+### 2.2 - React Frontend
+
+The frontend allows the user to navigate the UI and leverage the differenet bots.
 
 #### Code
 
