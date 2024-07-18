@@ -386,7 +386,7 @@ Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/
 
 - [WSL Python/WSL/VS CODE development environment](https://genaitutor.am2703.com/?content=pyenv-wsl-vscode)
 
-### 2.3 Ollama OpenAI endpoint compatibility
+### 2.3 - Ollama OpenAI endpoint compatibility
 
 Ollama is compatible with the OpenAI endpoints.
 
@@ -396,7 +396,7 @@ Ollama is compatible with the OpenAI endpoints.
 
 #### Code
 
-##### Curl an Ollama endpoint with OpenAI compatibility
+##### 2.3.1 - Curl an Ollama endpoint with OpenAI compatibility
 
 ```bash
 curl http://localhost:11434/v1/chat/completions \
@@ -414,7 +414,7 @@ curl http://localhost:11434/v1/chat/completions \
     }'
 ```
 
-##### Calling Ollama endpoint with the OpenAI SDK
+##### 2.3.2 - Calling Ollama endpoint with the OpenAI SDK
 
 ```python
 from openai import OpenAI

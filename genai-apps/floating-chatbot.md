@@ -15,7 +15,7 @@ This comprehensive tutorial is designed to walk you through the seamless integra
 Please note that the instructions outlined in this guide are intended for educational purposes and to demonstrate the process of embedding a floating chatbot. They are not optimized for deployment in a live production environment. As you follow along, you'll gain valuable insights into the intricacies of chatbot implementation, preparing you to customize and scale the feature for your specific production needs in the future.
 
 - This screenshot shows the floating chatbot activation button:
-![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-0.png?raw=true?raw=true)
+![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-0.png?raw=true)
 
 - This screenshot shows a chatbot conversation while maintaining the conversation history:
 ![Screenshot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/floating-chatbot-1.png?raw=true)
@@ -34,7 +34,7 @@ The main files and features are:
 
 1. Clone the repo
 2. Install the dependencies: `npn install`
-3. Update the `.env.local` file with the following settings:
+3. Create and update the `src/frontend/.env.local` file with the following settings:
 
 ```bash
 VITE_OPENAI_URI=https://<NAME>.openai.azure.com/openai/deployments/<MODEL_NAME>/chat/completions?api-version=2024-02-15-preview
@@ -73,7 +73,7 @@ Beside the React core packages, the application relies on:
   }
 }
 ```
-### 2.1 - `src/App.tsx`
+### 2.1 - Landing Page & Bot Activation
 
 ##### Code Title
 
@@ -127,11 +127,13 @@ export default App
 ```
 Link: (Source code)[https://github.com/msalemor/floating-chatbot/blob/main/src/frontend/src/App.tsx]
 
-### 2.2 - `src/components/floatingbot.tsx`
+### 2.2 - The Floating Chatbot React component
+
+This is a self contained React component to call a GPT completion endpoint. Upon activation, the user is allow to have a conversation with the system.
 
 #### Code
 
-##### 2.1.1 - The floating chatbot React component
+##### 2.1.1 - The floating chatbot React component code
 
 ```tsx
 import { useState } from "react"
@@ -217,11 +219,11 @@ export default FloatingBot
 ```
 Link: (Source code)[https://github.com/msalemor/floating-chatbot/blob/main/src/frontend/src/components/floatingbot.tsx]
 
-### 2.3 - `src/services/chatbotservice.tsx`
+### 2.3 - Chatbot GPT Service
 
 #### Code
 
-##### 2.3.1 - The chatbot service
+##### 2.3.1 - The chatbot service code
 
 ```tsx
 import axios from "axios";
