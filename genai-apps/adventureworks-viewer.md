@@ -10,15 +10,26 @@
 
 ### 1.1 - Overview
 
-![Screen shot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/adventureworks-ai-viewer.png?raw=true)
-
 Advetureworks viewer is a showcase application desgined to add AI at different levels of intelligence including:
 
 1. **No AI:** The application with no AI. This simulates a legacy application where a user can lookup information related to customer, products and orders from the Adventureworks database.
 2. **Chatbot:** Chatbot that can answer quetions about top customers and products.
 3. **SQLbot:** A bot that can generate SQL and display the results on the grid.
-4. **Assistans API Bot:** Assistants API bot that can perform complex analysis on top products and services and generate bar and charts.
-5. **Multi-agent Bot:** A bot that can recognize intent and leverage the other bots to answer.
+4. **RAG:** A bot that can generate SQL and display the results on the grid.
+5. **Assistans API:** Assistants API bot that can perform complex analysis on top products and services and generate bar and charts.
+6. **Multi-agent:** A bot that can recognize intent and leverage the other bots to answer.
+
+![Screen shot](https://github.com/msalemor/ai-tutors/blob/main/genai-apps/images/adventureworks-ai-viewer.png?raw=true)
+
+### 1.2 - Chatbot
+
+### 1.3 - SQLbot
+
+### 1.4 - RAG
+
+### 1.5 - Assistants API
+
+### 1.6 - Multi-Agent
 
 ## 2.0 - The application
 
