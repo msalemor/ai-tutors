@@ -50,3 +50,5 @@ What is UDP and how can it be used to transmit video?
 
 - Capture a frame from the stream every 5 seconds:
   - `ffmpeg -i udp://localhost:5000 -vf "fps=1/5" -f image2 output_%d.jpg`
+
+> **Note:** File will be created every 5 secondas with the names: `output_1.jpg, output_2.jpg, etc.`
