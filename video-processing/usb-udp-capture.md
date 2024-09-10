@@ -45,7 +45,6 @@ What is UDP and how can it be used to transmit video?
 - View the UDP stream:
   - `ffplay udp://localhost:5000`
 
-
 ### 1.4 - Capture frames from the stream
 
 - Capture a frame from the stream every 5 seconds:
