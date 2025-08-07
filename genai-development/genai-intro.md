@@ -57,6 +57,8 @@ When an OpenAI model is deployed in Aziure, the administrator has to set a token
 - Use techniques like prompt compression and prompt caching
 - Try to batch the work into one prompt
 - Remember that a prompt can do more than one thing (i.e. summarize the following content and create versions of the summary in English, Spanish and French)
+- Monitor your applications and include SLO
+- Follow responsible AI best practices
 
 ### 1.8 - Inference
 
