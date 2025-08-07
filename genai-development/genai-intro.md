@@ -4,17 +4,7 @@
 
 ### 1.1 - Objective
 
-This guide is intended to provide AI developers with a thorough understanding of the concepts and principles involved in developing and utilizing generative AI applications. Through this guide, we will delve into the key concepts, techniques, and best practices for developing and integrating generative AI models into various applications. You should aim to come out of this guide with the following top foundational concepts:
-
-- Tokens
-- Token limits
-- Models
-- Prompt/Completion
-- Prompt Engineering
-- Inference
-- Message roles
-- Calling the model with REST
-- Calling the modesl with the OpenAI SDK
+This guide is intended to provide AI developers with a thorough understanding of the concepts and principles involved in developing and utilizing generative AI applications. Through this guide, we will delve into the key concepts, techniques, and best practices for developing and integrating generative AI models into various applications.
 
 ### 1.2 - Requirements and recommendations
 
