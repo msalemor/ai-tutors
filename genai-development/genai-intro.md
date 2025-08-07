@@ -19,7 +19,7 @@ This guide is intended to provide AI developers with a thorough understanding of
 ### 1.2 - Requirements and recommendations
 
 - Access to an Azure OpenAI GPT models.
-- If trying the development execises, experience setting up a Python development environment and installing Python packages.
+- If you plan to test the code, experience setting up a Python development environment and installing Python packages.
 - Intermediate development knowledge; specially calling REST APIs.
 
 #### References
