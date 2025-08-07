@@ -8,6 +8,16 @@ This guide is intended to provide AI developers with a thorough understanding of
 
 Through this guide, we will delve into the key concepts, techniques, and best practices for developing and integrating generative AI models into various applications.
 
+You should airm to come out of this guide with the following top foundational concepts:
+
+- Tokens
+- Models
+- Inference
+- Message Role
+- Calling the model with REST
+- Calling the modesl with the OpenAI SDK
+
+
 ### 1.2 - Requirements and recommendations
 
 - Access to an Azure OpenAI GPT models.
@@ -43,6 +53,18 @@ The Azure OpenAI Service offers a flexible pricing model that caters to differen
 To manage costs effectively, it's crucial to understand the token-based pricing system. Azure OpenAI models process text by breaking it down into tokens, with each token representing roughly four characters of English text. This means that the cost is directly related to the amount of text processed by the AI.
 
 For those looking to optimize their Azure OpenAI token cost performance, it's recommended to monitor usage closely and understand the limits and quotas imposed by the service. Efficient monitoring strategies can help prevent unexpected costs and ensure a good customer experience.
+
+### 1.6 - Token limits, throttling, concurrent and retry logic
+
+When a model is deployed, the administrator has to set a token limit in Tokens per minute. Newer models, like GPT 4.1, can achieve up to 1 million tokens per minute, but even for this model, an AI developer should pay special considerations when designing and building GenAI apps. Some of these are:
+
+- Implement retry logic (429 and other HTTP codes)
+- Load balance two or more OpenAI endpoints if needed
+- Be careful with concurrent tasks as they quickly exceed the model TPM limit
+- Manage the conversation window and large prompts
+- Use technique like prompt compression and prompt caching
+- Try to batch the work
+- Remember that a prompt can do more than one thing (i.e. summarize the following content and create versions of the summary in English, Spanish and French)
 
 ### 1.7 - Inference
 
