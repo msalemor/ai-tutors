@@ -58,19 +58,19 @@ To manage costs effectively, it's crucial to understand the token-based pricing 
 
 For those looking to optimize their Azure OpenAI token cost performance, it's recommended to monitor usage closely and understand the limits and quotas imposed by the service. Efficient monitoring strategies can help prevent unexpected costs and ensure a good customer experience.
 
-### 1.6 - Token limits, throttling, concurrent jobs and retry logic
+### 1.7 - Token limits, throttling, concurrent jobs and retry logic
 
-When a model is deployed, the administrator has to set a token limit in Tokens per minute. Newer models, like GPT 4.1, can achieve up to 1 million tokens per minute, but even for this model, an AI developer should pay special considerations when designing and building GenAI apps. Some of these are:
+When an OpenAI model is deployed in Aziure, the administrator has to set a token limit in Tokens per minute. Newer models, like GPT 4.1, can achieve up to 1 million tokens per minute, but even for this model, an AI developer should pay special considerations when designing and building GenAI apps. Some of these are:
 
 - Implement retry logic (429 and other HTTP codes)
 - Load balance two or more OpenAI endpoints if needed
 - Be careful with concurrent tasks as they quickly exceed the model TPM limit
 - Manage the conversation window and large prompts
-- Use technique like prompt compression and prompt caching
-- Try to batch the work
+- Use techniques like prompt compression and prompt caching
+- Try to batch the work into one prompt
 - Remember that a prompt can do more than one thing (i.e. summarize the following content and create versions of the summary in English, Spanish and French)
 
-### 1.7 - Inference
+### 1.8 - Inference
 
 Inference in the context of GenAI is the process of using a trained model to generate outputs based on new input data. While training involves learning patterns from data, inference is about applying that knowledge. For example, when you type a prompt into a chatbot, the model uses inference to predict and generate a relevant response. This process happens in real time and relies on the model’s internal representations of language, context, and probability.
 
