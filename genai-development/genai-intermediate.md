@@ -1,4 +1,4 @@
-# Generative App Development - Intermediate Concepts
+# Generative AI App Development - Intermediate Concepts
 
 ## 1.0 - Overview
 
