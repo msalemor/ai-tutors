@@ -10,8 +10,8 @@ Through this guide, we will delve into the key concepts, techniques, and best pr
 
 ### 1.2 - Requirements and recommendations
 
-- Access to an Azure OpenAI GPT account to deploy models.
-- Experience setting up a python development environment and installing Python packages.
+- Access to an Azure OpenAI GPT models.
+- If trying the development execises, experience setting up a Python development environment and installing Python packages.
 - Intermediate development knowledge; specially calling REST APIs.
 
 #### References
@@ -24,7 +24,7 @@ Large Language Models (LLMs) are a cornerstone of generative AI. A large languag
 
 ### 1.4 - Why is an LLM a Foundational Model?
 
-Large language models (LLMs) are considered foundational models due to their extensive training on massive datasets, which enables them to understand and generate natural language. This foundational capability allows them to support a wide range of applications and tasks. Unlike models designed for specific domains, LLMs provide a broad base that can be adapted for various uses, making them more versatile and cost-effective.
+Large language models (LLMs) are considered foundational models due to their extensive training on massive datasets, which enables them to understand and generate natural language. This foundational capability allows them to support a wide range of applications and tasks. Unlike models designed for specific domains (price predictor, insulin dosage, etc.), LLMs provide a broad base that can be adapted for various uses, making them more versatile and cost-effective.
 
 The significance of LLMs extends beyond their technical capabilities; they have become integral to the adoption of AI across numerous business functions and use cases. Their ability to infer from context and generate human-like text has made them a key player in the modern digital landscape, reshaping how we interact with technology and access information.
 
@@ -32,11 +32,11 @@ In summary, LLMs are foundational because they provide the underlying architectu
 
 ### 1.5 - OpenAI Models in Azure
 
-The Azure OpenAI Service offers a variety of models, including the latest GPT-4o and GPT-4 Turbo, which are multimodal and can handle both text and image inputs. Other available models are GPT-4, which improves upon its predecessor GPT-3.5 with enhanced natural language and coding capabilities, and GPT-3.5 itself. Additionally, there are Embeddings models for converting text to numerical vectors, DALL-E for generating images from text, Whisper for transcribing and translating speech, and a Text to Speech model currently in preview. These models are designed to cater to a wide range of applications, from conversational AI to content creation and beyond.
+The Azure OpenAI Service offers a variety of models, including the latest GPT-4o and GPT-4.1, which are multimodal and can handle both text and image inputs. Additionally, there are Embeddings models for converting text to numerical vectors, DALL-E for generating images from text, Whisper for transcribing and translating speech, and a Text to Speech model currently in preview. These models are designed to cater to a wide range of applications, from conversational AI to content creation and beyond.
 
 ### 1.6 - Tokens, Cost and Performance
 
-OpenAI's models, such as GPT-3 and GPT-4, use tokens to process text. One token generally corresponds to about four characters of English text, which translates to roughly three-quarters of a word. Therefore, 100 tokens would be approximately equivalent to 75 words. It's important to note that the exact tokenization process can vary between different models.
+OpenAI's models, use tokens to process text. One token generally corresponds to about four characters of English text, which translates to roughly three-quarters of a word. Therefore, 100 tokens would be approximately equivalent to 75 words. It's important to note that the exact tokenization process can vary between different models.
 
 The Azure OpenAI Service offers a flexible pricing model that caters to different usage needs. The service provides two main pricing options: Pay-As-You-Go (PAYG) and Provisioned Throughput Units (PTUs). PAYG allows users to pay only for the resources they use, which can help optimize costs for intermittent or unpredictable workloads. On the other hand, PTUs offer a more predictable cost structure with minimal latency variance, suitable for applications requiring consistent performance at scale.
 
@@ -44,17 +44,24 @@ To manage costs effectively, it's crucial to understand the token-based pricing 
 
 For those looking to optimize their Azure OpenAI token cost performance, it's recommended to monitor usage closely and understand the limits and quotas imposed by the service. Efficient monitoring strategies can help prevent unexpected costs and ensure a good customer experience.
 
+### 1.7 - Inference
+
+Inference in the context of GenAI is the process of using a trained model to generate outputs based on new input data. While training involves learning patterns from data, inference is about applying that knowledge. For example, when you type a prompt into a chatbot, the model uses inference to predict and generate a relevant response. This process happens in real time and relies on the model’s internal representations of language, context, and probability.
+
+Inference works by feeding the input into the model’s neural network, which processes it through multiple layers of mathematical operations. Each layer refines the understanding of the input, and the final layer produces the output—whether it’s a sentence, an image, or a piece of code. The model doesn’t “understand” in a human sense, but it uses statistical patterns to generate responses that are often coherent and contextually appropriate.
+
 #### References
 
 - [What are tokens?](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them)
 - [OpenAI Tokenizer - Tool to view tokens](https://platform.openai.com/tokenizer)
+- [Inference visualization](https://bbycroft.net/llm)
 
 
-### 1.7 - Prompt and Completion
+### 1.8 - Prompt and Completion
 
 In the context of large language models (LLMs), a "prompt" refers to the input given to the model, which usually consists of a question or a statement that requires a response or continuation. The "completion" is the output generated by the model, which is the model's response or continuation of the input prompt. Essentially, the prompt is what you ask or tell the model, and the completion is what the model generates in return. This interaction is fundamental to how LLMs are used for various applications, from generating text to answering questions.
 
-### 1.8 - Prompt Engineering and Prompt Engineering Techniques
+### 1.9 - Prompt Engineering and Prompt Engineering Techniques
 
 Prompt engineering is a field of study and practice that focuses on designing and refining prompts to effectively interact with language models, like GPT-4. The goal is to elicit the most accurate, relevant, and coherent responses from the model. This is particularly important as the outputs of language models are highly dependent on the input prompts they receive.
 
@@ -68,14 +75,17 @@ Here are some advanced prompt engineering techniques:
 
 There are many more techniques. These techniques can be combined and customized based on the specific requirements of the task and the capabilities of the language model being used. Effective prompt engineering can significantly enhance the performance of language models across various applications, from simple Q&A systems to complex problem-solving tasks.
 
+These technique are foundational to improve the expected results in tasks like Copilots, for Code Generation, and AI application development.
+
 #### References
 
+- [Prompting techniqiues](https://www.promptingguide.ai/techniques)
 - [Azure - Prompt Engineering](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions)
 - [OpenAI - Prompt Engineering](https://platform.openai.com/docs/guides/prompt-engineering/prompt-engineering)
 
-### 1.9 - OpenAI Models are REST APIs
+### 1.10 - OpenAI Models are REST APIs
 
-The Azure OpenAI Service provides a REST API that allows developers to interact with OpenAI's powerful language models, including GPT-4 and GPT-3.5-Turbo. The REST API offers various endpoints for operations such as creating completions, embeddings, and chat completions. Authentication can be handled via API Keys or Microsoft Entra ID, and the service supports multiple versions of the API, ensuring backward compatibility and access to the latest features.
+The Azure OpenAI Service provides a REST API that allows developers to interact with OpenAI's powerful language models, including GPT-4o and GPT-4.1. The REST API offers various endpoints for operations such as performing completions and embeddings. Authentication can be handled via API Keys or Microsoft Entra ID, and the service supports multiple versions of the API, ensuring backward compatibility and access to the latest features.
 
 #### Code
 
@@ -89,15 +99,13 @@ curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYM
 ```
 Explain: Explain the command and in terms of running this command from bash or powershell.
 
-### 1.10 - Chat vs Instruct Models
+### 1.11 - Chat Models
 
-The OpenAI chat and instruct models are variations of language models designed for different applications. The chat model is optimized for conversational contexts, aiming to produce natural and engaging dialogue. It is well-suited for scenarios that require a back-and-forth interaction, such as customer service or casual conversation.
+Chat models are optimized for conversational contexts, aiming to produce natural and engaging dialogue. It is well-suited for scenarios that require a back-and-forth interaction, such as customer service or casual conversation.
 
-On the other hand, the instruct model is fine-tuned to follow specific user instructions, making it ideal for tasks that require a direct response to a command or query. This model is particularly useful for applications where precise information or action is needed in response to a prompt.
+There is also an Instruct Model. Unlike Chat Models, Instruct models are not optimized for conversations, but questions and answers where the context does not need to be maintained.
 
-Both models are built on the foundation of large language models, but they are trained and fine-tuned with different datasets and objectives to better suit their intended use cases. The instruct model, for example, may be trained with a focus on following explicit instructions and providing concise answers, while the chat model might be trained to engage in a more free-form and human-like manner.
-
-### 1.11 - Chat Model `system`, `user`, and `assistant` Roles
+### 1.12 - Chat Model `system`, `user`, and `assistant` Roles
 
 In the context of OpenAI's API, particularly with GPT-4 and ChatGPT, the roles of system, user, and assistant are used to structure the flow of a conversation. 
 
@@ -106,6 +114,8 @@ In the context of OpenAI's API, particularly with GPT-4 and ChatGPT, the roles o
 - Lastly, the assistant role is attributed to the responses generated by the model based on the user's messages. 
 
 These roles help in organizing the dialogue and ensuring that the model can distinguish between the different parts of the conversation for a coherent exchange of information.
+
+Setting the `system role` is particulalry important in Agent based system where each each may be resposible for unique task.
 
 #### Code
 
@@ -119,7 +129,7 @@ curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYM
 ```
 Explain: Explain this code interms of terms of the curl command the the OpenAI roles.
 
-### 1.12 - Calling the models with REST and the OpenAI SDK
+### 1.13 - Calling the models with REST and the OpenAI SDK
 
 As stated above, OpenAI models are REST APIs. The models can be called from any application that can make REST requests using a POST action. Understanding how to calls these models using REST is important in case you work in other languages that don't have SDKs.
 
@@ -127,9 +137,10 @@ The OpenAI Python SDK is a powerful tool that allows developers to interact with
 
 To run the following code you will need:
 
-- A GPT 3.5 or 4 model deploy in Azure
+- A GPT-4o or GPT-4.1 model deployed in Azure
 - An GPT API key
-- Set the environment variables
+  - In prod, Entra ID is recommended
+- Set the environment variables via the `.env` file
   - `OPENAI_FULL_ENDPOINT`
   - `OPENAI_ENDPOINT`
   - `OPENAI_API_KEY`
@@ -139,6 +150,7 @@ To run the following code you will need:
 - Intall the `requests` package by running: `pip install requests`
 
 > **Note:** Python-Dotenv is a package that lets you read you environment variables from the environment or a `.env` file. If you do create an `.env` file it should contain the environement variables above.
+> **Note:** Getting the full endpoint
 
 #### Code
 
