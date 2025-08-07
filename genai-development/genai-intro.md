@@ -170,11 +170,14 @@ To run the following code you will need:
 - A GPT-4o or GPT-4.1 model deployed in Azure
 - An GPT API key
   - In prod, Entra ID is recommended
-- Set the environment variables via the `.env` file
-  - `OPENAI_FULL_ENDPOINT`
-  - `OPENAI_ENDPOINT`
-  - `OPENAI_API_KEY`
-  - `OPENAI_MODEL`
+- Create an `.env` file with the following values:
+```bash
+FULL_ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01
+ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/
+API_KEY=<KEY>
+API_VERSION=2025-01-01
+GPT_MODEL=gpt-4o
+```
 - Intall the `openai` package by running: `pip install openai`
 - Intall the `python-dotenv` package by running: `pip install python-dotenv`
 - Intall the `requests` package by running: `pip install requests`
@@ -194,8 +197,7 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
-# Full endpoint format:
-#   https://<NAME>.openai.azure.com/openai/deployments/<MODEL>/chat/completions?full_endpoint = os.
+full_endpoint = os.getenv("FULL_ENDPOINT")
 api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION") or "2024-05-01-preview"
 
@@ -244,7 +246,7 @@ from openai import AzureOpenAI
 
 # Load the environment variables
 load_dotenv()
-endpoint = os.getenv("FULL_ENDPOINT")
+endpoint = os.getenv("ENDPOINT")
 api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION") or "2024-05-01-preview"
 model = os.getenv("GPT_MODEL")
