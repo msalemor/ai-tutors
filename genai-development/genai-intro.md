@@ -4,19 +4,17 @@
 
 ### 1.1 - Objective
 
-This guide is intended to provide AI developers with a thorough understanding of the concepts and principles involved in developing and utilizing generative AI applications.
-
-Through this guide, we will delve into the key concepts, techniques, and best practices for developing and integrating generative AI models into various applications.
-
-You should airm to come out of this guide with the following top foundational concepts:
+This guide is intended to provide AI developers with a thorough understanding of the concepts and principles involved in developing and utilizing generative AI applications. Through this guide, we will delve into the key concepts, techniques, and best practices for developing and integrating generative AI models into various applications. You should aim to come out of this guide with the following top foundational concepts:
 
 - Tokens
+- Token limits
 - Models
+- Prompt/Completion
+- Prompt Engineering
 - Inference
-- Message Role
+- Message roles
 - Calling the model with REST
 - Calling the modesl with the OpenAI SDK
-
 
 ### 1.2 - Requirements and recommendations
 
@@ -31,6 +29,12 @@ You should airm to come out of this guide with the following top foundational co
 ### 1.3 - What is a Large Language Model (LLM)?
 
 Large Language Models (LLMs) are a cornerstone of generative AI. A large language model is a type of artificial intelligence that processes and generates human-like text by predicting the likelihood of a sequence of words. It's trained on vast amounts of text data and uses complex algorithms to understand and produce language in a way that is coherent and contextually relevant. These models can perform a variety of tasks, such as translation, summarization, answering questions, and even creating content. They are called 'large' because they consist of millions or even billions of parameters that help them understand the nuances of language. Their capabilities are continually evolving, making them powerful tools for both research and practical applications in numerous industries.
+
+Models are trained on a corpus of data, as such models may be immediatly outdated once published. For certain tasks, you may be able to rely on the data that the model was trained on, for example, code generation. Having said this, for most tasks, you will need to set the context or provide the model the data that you want to use for the requested prompt. For example, you may provide an email and prompt for the model to summarize it or extract action items. This is a key concept, models are foundational models that can perform multiple tasks such as summarization, analysis, scoring, translation, etc. and it is important to understand that they are powerful when you tap into this capabilities with your own data.
+
+Formula:
+- Promt=System Message + User Message + User Data
+- Prompt -> LLM(Summarize, Score, Translate, etc.) -> Completion
 
 ### 1.4 - Why is an LLM a Foundational Model?
 
@@ -104,6 +108,21 @@ These technique are foundational to improve the expected results in tasks like C
 - [Prompting techniqiues](https://www.promptingguide.ai/techniques)
 - [Azure - Prompt Engineering](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions)
 - [OpenAI - Prompt Engineering](https://platform.openai.com/docs/guides/prompt-engineering/prompt-engineering)
+
+### 1.10 - Context Engineering vs Prompt Engineering
+
+Prompt Engineering is the art of crafting precise, effective inputs to guide AI behavior. It’s about asking the right question in the right way. Think of it as giving clear instructions to a very smart assistant. Context Engineering, on the other hand, is about designing the environment in which the AI operates. This includes:
+
+- Structuring memory and retrieval systems
+- Managing long-term vs. short-term context
+- Curating relevant data and metadata
+- Orchestrating multi-agent collaboration
+
+While prompt engineering focuses on what you say to the model, context engineering focuses on what the model knows when it responds.
+
+Why does this matter?
+- Prompt engineering is great for quick wins and one-off tasks. 
+- Context engineering is essential for building scalable, consistent, and intelligent systems—especially in enterprise and multi-agent environments.
 
 ### 1.10 - OpenAI Models are REST APIs
 
