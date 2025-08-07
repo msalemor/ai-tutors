@@ -1,4 +1,4 @@
-# Generative App Development - Foundational Concepts
+# Generative AI App Development - Foundational Concepts
 
 ## 1.0 - Foundational Concepts
 
