@@ -54,7 +54,7 @@ To manage costs effectively, it's crucial to understand the token-based pricing 
 
 For those looking to optimize their Azure OpenAI token cost performance, it's recommended to monitor usage closely and understand the limits and quotas imposed by the service. Efficient monitoring strategies can help prevent unexpected costs and ensure a good customer experience.
 
-### 1.6 - Token limits, throttling, concurrent and retry logic
+### 1.6 - Token limits, throttling, concurrent jobs and retry logic
 
 When a model is deployed, the administrator has to set a token limit in Tokens per minute. Newer models, like GPT 4.1, can achieve up to 1 million tokens per minute, but even for this model, an AI developer should pay special considerations when designing and building GenAI apps. Some of these are:
 
