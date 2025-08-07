@@ -178,9 +178,10 @@ To run the following code you will need:
 - Intall the `openai` package by running: `pip install openai`
 - Intall the `python-dotenv` package by running: `pip install python-dotenv`
 - Intall the `requests` package by running: `pip install requests`
+- Install the `azure-identiy` package by running `pip install azure-identity`
 
 > **Note:** Python-Dotenv is a package that lets you read you environment variables from the environment or a `.env` file. If you do create an `.env` file it should contain the environement variables above.
-> **Note:** Getting the full endpoint
+> **Note:** To get the full OpenAI endpoint, in AI Foundry click on the model, and copy the full endpoint which has the following format: `https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01`
 
 #### Code
 
@@ -249,8 +250,20 @@ api_version = os.getenv("API_VERSION") or "2024-05-01-preview"
 model = os.getenv("GPT_MODEL")
 
 # Create the client
-client = AzureOpenAI(azure_endpoint=endpoint,
-                     api_key=api_key, api_version=api_version)
+if api_key:
+  client = AzureOpenAI(azure_endpoint=endpoint,
+                       api_key=api_key,
+                       api_version=api_version)
+else:
+  # Recommended with: az login
+  token_provider = get_bearer_token_provider(
+      DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
+  )
+  client = AzureOpenAI(
+    api_version=api_version,
+    azure_endpoint=endpoint,
+    azure_ad_token_provider=token_provider
+  )
 
 def completion(input: str, temperature: float = 0.1) -> dict:
     completion = client.chat.completions.create(
