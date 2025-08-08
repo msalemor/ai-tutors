@@ -184,7 +184,7 @@ api-key: <KEY>
     "temperature": 0.1,
     "messages":[
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "Count to 5 in a for loop."}
+        {"role": "user", "content": "What is the capital of France?"}
     ]
 }
 ```
@@ -231,6 +231,7 @@ To run the following code you will need:
 - A GPT-4o or GPT-4.1 model deployed in Azure
 - An GPT API key
   - In prod, Entra ID is recommended and login with `az login`
+- Create a python environment
 - Create an `.env` file with the following values:
 
 ```bash
@@ -241,10 +242,8 @@ API_VERSION=2025-01-01
 GPT_MODEL=gpt-4o
 ```
 
-- Intall the `openai` package by running: `pip install openai`
-- Intall the `python-dotenv` package by running: `pip install python-dotenv`
-- Intall the `requests` package by running: `pip install requests`
-- Install the `azure-identiy` package by running `pip install azure-identity`
+- Create and Python environment and instanll the following Python packages:
+  - `pip install openai python-dotenv requests azure-identity fastapi uvicorn[standard]`
 
 > **Note:** Python-Dotenv is a package that lets you read you environment variables from the environment or a `.env` file. If you do create an `.env` file it should contain the environement variables above.
 > **Note:** To get the full OpenAI endpoint, in AI Foundry click on the model, and copy the full endpoint which has the following format: `https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01`
@@ -260,6 +259,9 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
+# Full endpoint format:
+#   https://<NAME>.openai.azure.com/openai/deployments/<MODEL>/chat/completions?api-version=2024-02-15-preview
+# os.getenv("FULL_ENDPOINT")
 full_endpoint = os.getenv("FULL_ENDPOINT")
 api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION") or "2024-05-01-preview"
@@ -269,6 +271,7 @@ headers = {
     "Content-Type": "application/json",
     "api-key": api_key
 }
+
 
 def completion(input: str, temperature: float = 0.1) -> dict:
     # Construct the request payload
@@ -286,6 +289,7 @@ def completion(input: str, temperature: float = 0.1) -> dict:
     # Get the response JSON
     return response.json()
 
+
 # Set the prompt and other parameters
 response_json = completion("What is the speed of light?")
 
@@ -300,8 +304,6 @@ Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/
 
 ##### Call a GPT model using the OpenAI SDK
 
-> **Note:** This is the simplest way to make a call to a GPT model. Even this simple code is already very useful. All you have to do is to provide it different prompts, and the system will process those prompts for completion. In other words, this is very similar in functionality as some playgrounds.
-
 ```python
 import os
 import json
@@ -312,26 +314,16 @@ from openai import AzureOpenAI
 load_dotenv()
 endpoint = os.getenv("ENDPOINT")
 api_key = os.getenv("API_KEY")
-api_version = os.getenv("API_VERSION") or "2024-05-01-preview"
+api_version = os.getenv("API_VERSION")
 model = os.getenv("GPT_MODEL")
 
 # Create the client
-if api_key:
-  client = AzureOpenAI(azure_endpoint=endpoint,
-                       api_key=api_key,
-                       api_version=api_version)
-else:
-  # Recommended with: az login
-  token_provider = get_bearer_token_provider(
-      DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
-  )
-  client = AzureOpenAI(
-    api_version=api_version,
-    azure_endpoint=endpoint,
-    azure_ad_token_provider=token_provider
-  )
+client = AzureOpenAI(azure_endpoint=endpoint, api_key=api_key, api_version=api_version)
 
-def completion(input: str, temperature: float = 0.1) -> dict:
+# Make a completion request
+
+
+def completion(input: str, temperature: float = 0.1) -> tuple[dict, str]:
     completion = client.chat.completions.create(
         model=model,
         messages=[
@@ -341,16 +333,17 @@ def completion(input: str, temperature: float = 0.1) -> dict:
             },
         ],
     )
-    return json.loads(completion.to_json())
+    return (json.loads(completion.to_json()), completion.choices[0].message.content)
+
 
 # Set the prompt and other parameters
-response_json = completion("What is the speed of light?")
+(full, response) = completion("What is the speed of light?")
 
 # Print the full JSON response
-print(json.dumps(response_json, indent=4))
+print(json.dumps(full, indent=4))
 
 # Print the response only
-print(response_json['choices'][0]['message']['content'])
+print(response)
 ```
 
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/completion-sdk.py)
@@ -410,10 +403,14 @@ client = AzureOpenAI(api_key=api_key,
                      api_version="2024-02-15-preview")
 
 # Define a function to get the car details
+
+
 def mock_get_car_details():
     return {"make": "Toyota", "model": "Camry", "year": 2018, "color": "blue", "price": 20000}
 
 # Define a function to get the sales description
+
+
 def get_sales_description():
     car = mock_get_car_details()
 
@@ -464,7 +461,7 @@ def mock_get_product_comments() -> list[str]:
             "This product is terrible.",
             "This product is okay."]
 
-# Define a function to get the sentiment score
+
 def get_sentiment_score(comment: str) -> float:
     response = client.chat.completions.create(
         model=model,  # model = "deployment_name".
@@ -479,7 +476,7 @@ def get_sentiment_score(comment: str) -> float:
     sentiment = json.loads(json_respond)
     return float(sentiment["score"])
 
-# 
+
 def get_sentiment():
     comments = mock_get_product_comments()
     total = 0.0
@@ -490,6 +487,7 @@ def get_sentiment():
 
 if __name__ == "__main__":
     get_sentiment()
+
 ```
 
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/sentiment-analysis.py)
@@ -606,17 +604,21 @@ client = AzureOpenAI(api_key=api_key,
 
 app = FastAPI()
 
+
 class Message(BaseModel):
     role: str
     content: str
+
 
 class PromptRequest(BaseModel):
     messages: list[Message]
     max_tokens: int | None = None
     temperature: float = 0.1
 
+
 class CompletionResponse(BaseModel):
     response: str
+
 
 @app.post("/completion", response_model=CompletionResponse)
 def post_completion(request: PromptRequest):
@@ -653,9 +655,10 @@ Function Calling is a powerful capability in Azure OpenAI (and OpenAI's GPT mode
 ##### Simple function calling example
 
 ```python
-import openai
 import os
 import json
+from openai import AzureOpenAI
+from dotenv import load_dotenv
 
 # Azure OpenAI configuration
 load_dotenv()
@@ -663,6 +666,10 @@ endpoint = os.getenv("ENDPOINT")
 api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION")
 model = os.getenv("GPT_MODEL")
+
+
+# Create the client
+client = AzureOpenAI(api_key=api_key, azure_endpoint=endpoint, api_version=api_version)
 
 # Define the function schema
 functions = [
@@ -674,50 +681,53 @@ functions = [
             "properties": {
                 "location": {
                     "type": "string",
-                    "description": "The city and state, e.g. Miami, FL"
+                    "description": "The city and state, e.g. New York, NY",
                 }
             },
-            "required": ["location"]
-        }
+            "required": ["location"],
+        },
     }
 ]
 
+
 # Simulate the function implementation
 def get_weather(location):
-    return {
-        "location": location,
-        "temperature": "88°F",
-        "condition": "Sunny"
-    }
+    return {"location": location, "temperature": "88°F", "condition": "Sunny"}
+
 
 # Chat completion with function calling
-response = openai.ChatCompletion.create(
+response = client.chat.completions.create(
     model=model,
-    messages=[
-        {"role": "user", "content": "What's the weather like in New York?"}
-    ],
+    messages=[{"role": "user", "content": "What's the weather like in New York?"}],
     functions=functions,
-    function_call="auto"
+    function_call="auto",
 )
 
 # Check if the model wants to call a function
 if response.choices[0].finish_reason == "function_call":
-    function_name = response.choices[0].message["function_call"]["name"]
-    arguments = json.loads(response.choices[0].message["function_call"]["arguments"])
+    function_call = response.choices[0].message.function_call
+    function_name = function_call.name
+    arguments = json.loads(function_call.arguments)
 
     # Call the function
     if function_name == "get_weather":
         result = get_weather(**arguments)
 
-        # Send the result back to the model
-        follow_up = openai.ChatCompletion.create(
+        # Send the result back to the model using the same AzureOpenAI client
+        follow_up = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "user", "content": "What's the weather like in Miami?"},
+                {"role": "user", "content": "What's the weather like in New York?"},
                 response.choices[0].message,
-                {"role": "function", "name": function_name, "content": json.dumps(result)}
-            ]
+                {
+                    "role": "function",
+                    "name": function_name,
+                    "content": json.dumps(result),
+                },
+            ],
         )
 
-        print(follow_up.choices[0].message["content"])
+        print(follow_up.choices[0].message.content)
 ```
+
+Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/function-calling.py)
