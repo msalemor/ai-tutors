@@ -57,8 +57,8 @@ When an OpenAI model is deployed in Aziure, the administrator has to set a token
 - Be careful with concurrent tasks as they quickly exceed the model TPM limit
 - Manage the conversation window and large prompts
 - Use techniques like prompt compression and prompt caching
-- Try to batch the work into one prompt
-- Remember that a prompt can do more than one thing (i.e. summarize the following content and create versions of the summary in English, Spanish and French)
+- Try to batch the tasks into one prompt
+  - **Note**: Remember that a prompt can do more than one thing (i.e. summarize the following content and create versions of the summary in English, Spanish and French)
 - Monitor your applications and include SLO
 - Follow responsible AI best practices
 
@@ -164,7 +164,7 @@ The Azure OpenAI Service provides a REST API that allows developers to interact 
 ##### Curl a GPT completion endpoint
 
 ```bash
-curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01 \
+curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01-preview \
   -H "Content-Type: application/json" \
   -H "api-key: YOUR_API_KEY" \
   -d '{"messages":[{"role": "system", "content": "You are a helpful assistant."},{"role": "user", "content": "Count to 5 in a for loop."}]}'
@@ -175,7 +175,7 @@ Explain: Explain the command and in terms of running this command from bash or p
 #### HTTP Client in Visual Studio
 
 ```text
-POST https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01
+POST https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01-preview
 content-type: application-json
 api-key: <KEY>
 
@@ -691,7 +691,7 @@ functions = [
 
 
 # Simulate the function implementation
-def get_weather(location):
+def get_weather(location) -> dict:
     return {"location": location, "temperature": "88°F", "condition": "Sunny"}
 
 
