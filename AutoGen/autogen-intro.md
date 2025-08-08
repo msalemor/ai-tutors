@@ -1,6 +1,5 @@
 # AutoGen - Intro
 
-
 ## 1.0 - Introduction to AutoGen
 
 ### 1.1 - What is AutGen?
@@ -21,13 +20,17 @@ Key features of AutoGen include:
 
 - [Doc: AutoGen Introduction](https://microsoft.github.io/autogen/docs/tutorial/introduction/)
 
+#### Questions
+
+- What is agentic AI?
+
 ### 1.2 - What is an Agent?
 
 In AutoGen, an agent is an entity designed to act on behalf of human intent. Agents can send and receive messages, respond to other agents, and perform actions based on their capabilities. They can be powered by various backends, including large language models (LLMs) like GPT-4, code executors, human inputs, or a combination of these.
 
 ### 1.3 - Multi-Agent Conversations
 
-AutoGen is considered a multi-agent conversation framework because it enables multiple agents to interact and collaborate to solve complex tasks. 
+AutoGen is considered a multi-agent conversation framework because it enables multiple agents to interact and collaborate to solve complex tasks.
 
 #### References
 
@@ -37,11 +40,11 @@ AutoGen is considered a multi-agent conversation framework because it enables mu
 
 Enhaced inference and Code Execution are feature that can be used without building full Agents:
 
-- Enhanced Inference: 
+- Enhanced Inference:
   - caching
   - templates
   - Endpoint fallback
-- Code Execution: 
+- Code Execution:
   - local runner
   - Docker runner
 
@@ -325,7 +328,6 @@ AutoGen Studio is an open-source, user-friendly interface designed to help you r
 
 - [Doc: AutoGen Studio](https://github.com/microsoft/autogen/tree/main/samples/apps/autogen-studio/autogenstudio)
 - [Code: workflowmanager.py](https://github.com/microsoft/autogen/blob/main/samples/apps/autogen-studio/autogenstudio/workflowmanager.py)
-
 
 #### Code
 

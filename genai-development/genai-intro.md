@@ -4,7 +4,7 @@
 
 ### 1.1 - Objective
 
-This guide is intended to provide the foundational concepts related to Generative AI and development with Generative AI. This guide delves into the key concepts, techniques, and best practices for understanding and leveraging Generative AI.
+This document provides a comprehensive introduction to foundational concepts and practical techniques for developing applications with Generative AI, focusing on Large Language Models (LLMs) such as those available through Azure OpenAI. It covers essential topics including what LLMs are, why they are considered foundational models, tokenization and cost management, prompt and context engineering, REST API usage, and the differences between chat, reasoning, and instruct models. The guide also includes hands-on code samples for making API calls, prompt engineering, sentiment analysis, intent recognition, and building chatbots using Python and FastAPI. Additionally, it introduces advanced features like function calling, offering both conceptual explanations and practical examples to help developers effectively leverage generative AI in real-world applications.
 
 ### 1.2 - Requirements and recommendations
 
@@ -19,33 +19,29 @@ This guide is intended to provide the foundational concepts related to Generativ
 
 ### 1.3 - What is a Large Language Model (LLM)?
 
-Large Language Models (LLMs) are a cornerstone of generative AI. A large language model is a type of artificial intelligence that processes and generates human-like text by predicting the likelihood of a sequence of words. It's trained on vast amounts of text data and uses complex algorithms to understand and produce language in a way that is coherent and contextually relevant. These models can perform a variety of tasks, such as translation, summarization, answering questions, and even creating content. They are called 'large' because they consist of millions or even billions of parameters that help them understand the nuances of language. Their capabilities are continually evolving, making them powerful tools for both research and practical applications in numerous industries.
+A Large Language Model (LLM) is a type of artificial intelligence system built using deep neural networks with billions or trillions of parameters that has been trained on vast amounts of text data from the internet, books, articles, and other written sources to understand and generate human-like text. These models use transformer architecture to process and understand the relationships between words, phrases, and concepts, enabling them to comprehend context, follow instructions, engage in conversations, write code, solve problems, and perform a wide variety of language-related tasks.
 
-Models are trained on a corpus of data, as such models may be immediatly outdated once published. For certain tasks, you may be able to rely on the data that the model was trained on, for example, code generation. Having said this, for most tasks, you will need to set the context or provide the model the data that you want to use for the requested prompt. For example, you may provide an email and prompt for the model to summarize it or extract action items. This is a key concept, models are foundational models that can perform multiple tasks such as summarization, analysis, scoring, translation, etc. and it is important to understand that they are powerful when you tap into this capabilities with your own data.
-
-Formula:
-- Promt=System Message + User Message + User Data
-- Prompt -> LLM(Summarize, Score, Translate, etc.) -> Completion
+LLMs like OpenAI's GPT series are trained through unsupervised learning to predict the next word in a sequence, which teaches them grammar, facts, reasoning patterns, and even some level of common sense, making them capable of producing coherent, contextually appropriate responses across diverse topics and applications. The "large" aspect refers both to the massive scale of training data (often terabytes of text) and the enormous number of parameters that allow these models to capture complex patterns in human language and knowledge.
 
 ### 1.4 - Why is an LLM a Foundational Model?
 
-Large language models (LLMs) are considered foundational models due to their extensive training on massive datasets, which enables them to understand and generate natural language. This foundational capability allows them to support a wide range of applications and tasks. Unlike models designed for specific domains (price predictor, insulin dosage, etc.), LLMs provide a broad base that can be adapted for various uses, making them more versatile and cost-effective.
+An LLM is considered a foundational model because it serves as a versatile base that can be adapted and fine-tuned for a wide variety of downstream tasks without requiring task-specific training from scratch. These models are trained on massive, diverse datasets that give them broad knowledge and capabilities across multiple domains - from natural language understanding and generation to reasoning, coding, and problem-solving.
 
-The significance of LLMs extends beyond their technical capabilities; they have become integral to the adoption of AI across numerous business functions and use cases. Their ability to infer from context and generate human-like text has made them a key player in the modern digital landscape, reshaping how we interact with technology and access information.
+Rather than being designed for a single purpose, foundational models like GPT-4 provide a general-purpose intelligence that can be specialized through techniques like prompt engineering, fine-tuning, or retrieval-augmented generation (RAG) to excel at specific applications such as customer service, content creation, code generation, or domain-specific question answering.
 
-### 1.5 - OpenAI models in Azure
+This foundational nature makes them incredibly cost-effective and powerful, as one pre-trained model can be the basis for hundreds of different AI applications, democratizing access to advanced AI capabilities across industries and use cases.
 
-The Azure OpenAI Service offers a variety of models, including the latest GPT-4o and GPT-4.1, which are multimodal and can handle both text and image inputs. Additionally, there are Embeddings models for converting text to numerical vectors, DALL-E for generating images from text, Whisper for transcribing and translating speech, and a Text to Speech model currently in preview. These models are designed to cater to a wide range of applications, from conversational AI to content creation and beyond.
+### 1.5 - OpenAI models in Azure AI Foundry
+
+The Azure OpenAI Service offers a variety of models, including the latest GPT-4o and GPT-4.1, which are multimodal and can handle both text and image inputs. Additionally, there are embeddings models for converting text to numerical vectors, DALL-E 3 for generating images from text, Whisper for transcribing and translating speech, and a Text to Speech model currently in preview. These models are designed to cater to a wide range of applications, from conversational AI to content creation and beyond.
 
 ### 1.6 - Tokens, cost and performance
 
-OpenAI's models, use tokens to process text. One token generally corresponds to about four characters of English text, which translates to roughly three-quarters of a word. Therefore, 100 tokens would be approximately equivalent to 75 words. It's important to note that the exact tokenization process can vary between different models.
+Tokens are the fundamental units that language models use to process and understand text, representing pieces of words, whole words, or even punctuation marks that the model breaks text into during analysis. In OpenAI models deployed on Azure, a token roughly corresponds to 3-4 characters in English text, meaning that a typical word might be 1-2 tokens, while longer or less common words could be broken into multiple tokens. For example, "hello" might be one token, while "understanding" could be split into "under" and "standing" as separate tokens. The tokenization process varies by language, with some languages like Chinese or Arabic requiring more tokens per character than English, and technical terms, code, or special characters often requiring additional tokens to represent properly.
 
 The Azure OpenAI Service offers a flexible pricing model that caters to different usage needs. The service provides two main pricing options: Pay-As-You-Go (PAYG) and Provisioned Throughput Units (PTUs). PAYG allows users to pay only for the resources they use, which can help optimize costs for intermittent or unpredictable workloads. On the other hand, PTUs offer a more predictable cost structure with minimal latency variance, suitable for applications requiring consistent performance at scale.
 
-To manage costs effectively, it's crucial to understand the token-based pricing system. Azure OpenAI models process text by breaking it down into tokens, with each token representing roughly four characters of English text. This means that the cost is directly related to the amount of text processed by the AI.
-
-For those looking to optimize their Azure OpenAI token cost performance, it's recommended to monitor usage closely and understand the limits and quotas imposed by the service. Efficient monitoring strategies can help prevent unexpected costs and ensure a good customer experience.
+From a performance perspective, models have token limits (context windows) that determine how much text they can process at once - exceeding these limits requires truncating conversation history or splitting requests, which can impact response quality and coherence. Additionally, more tokens generally mean longer processing times and higher latency, so optimizing prompt length, managing conversation history efficiently, and designing concise interactions not only reduces costs but also improves user experience through faster response times and better resource utilization in Azure deployments.
 
 #### References
 
@@ -68,9 +64,9 @@ When an OpenAI model is deployed in Aziure, the administrator has to set a token
 
 ### 1.8 - Inference
 
-Inference in the context of GenAI is the process of using a trained model to generate outputs based on new input data. While training involves learning patterns from data, inference is about applying that knowledge. For example, when you type a prompt into a chatbot, the model uses inference to predict and generate a relevant response. This process happens in real time and relies on the model’s internal representations of language, context, and probability.
+Inference in the context of large language models refers to the process of using a pre-trained model to generate predictions, responses, or outputs based on new input data that the model hasn't seen during training. During inference, the model applies the patterns, knowledge, and relationships it learned during training to process your prompt or query and produce a relevant response, whether that's answering a question, generating text, writing code, or performing any other task within its capabilities.
 
-Inference works by feeding the input into the model’s neural network, which processes it through multiple layers of mathematical operations. Each layer refines the understanding of the input, and the final layer produces the output—whether it’s a sentence, an image, or a piece of code. The model doesn’t “understand” in a human sense, but it uses statistical patterns to generate responses that are often coherent and contextually appropriate.
+This is the "thinking" phase where the model uses its billions of parameters to calculate probabilities and select the most appropriate tokens to generate, transforming your input into meaningful output. Inference is distinct from training (where the model learns from data) and represents the operational phase where the model is actively being used to provide value, making it the core process that powers all interactions with AI services like those available through Azure OpenAI, and it's during inference that costs are incurred based on token consumption and computational resources used.
 
 #### References
 
@@ -78,13 +74,50 @@ Inference works by feeding the input into the model’s neural network, which pr
 
 ### 1.9 - Prompt and Completion
 
-In the context of large language models (LLMs), a "prompt" refers to the input given to the model, which usually consists of a question or a statement that requires a response or continuation. The "completion" is the output generated by the model, which is the model's response or continuation of the input prompt. Essentially, the prompt is what you ask or tell the model, and the completion is what the model generates in return. This interaction is fundamental to how LLMs are used for various applications, from generating text to answering questions.
+A **prompt** is the input text or instruction that you provide to a large language model to initiate a conversation or request a specific task, serving as the starting point for the model's response generation. Prompts can range from simple questions like "What is the capital of France?" to complex instructions that include context, examples, formatting requirements, and specific guidelines for how the model should respond. The quality and structure of your prompt significantly influences the model's output, making prompt engineering a crucial skill for getting optimal results from AI systems.
+
+A **completion** is the model's generated response to your prompt, representing the text that the model predicts should logically follow based on the patterns it learned during training. The completion process involves the model analyzing your prompt, understanding the context and intent, and then generating tokens one by one until it reaches a natural stopping point, produces a specified number of tokens, or hits a defined completion criteria.
+
+When you make a request to OpenAI's API through Azure or directly, the response includes much more than just the completion text itself. The API returns structured metadata including **usage statistics** that show the number of prompt tokens, completion tokens, and total tokens consumed (essential for cost tracking), a **finish_reason** that indicates why the generation stopped (such as reaching a natural end, hitting token limits, or being filtered by content policies), **model information** specifying which exact model version was used, and often **additional fields** like response timestamps, request IDs for debugging, and confidence scores. Some responses may also include **logprobs** (log probabilities) that show the model's confidence in each token choice, **alternative completions** when multiple outputs are requested, and **content filter results** that indicate if any safety mechanisms were triggered, providing developers with comprehensive information to monitor performance, debug issues, manage costs, and ensure responsible AI usage in their applications.
+
+Sample completion:
+
+```json
+{
+  "id": "chatcmpl-8VwKjX9Y2L4nQ6mR5tP3sU7vW1xZ",
+  "object": "chat.completion",
+  "created": 1701234567,
+  "model": "gpt-4o-2024-08-06",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "The capital of France is Paris. It's the largest city in France and serves as the country's political, economic, and cultural center.",
+        "refusal": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 12,
+    "completion_tokens": 28,
+    "total_tokens": 40,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "system_fingerprint": "fp_2f57f81c65"
+}
+```
 
 ### 1.10 - Prompt Engineering and Prompt Engineering techniques
 
-Prompt engineering is a field of study and practice that focuses on designing and refining prompts to effectively interact with language models, like GPT-4. The goal is to elicit the most accurate, relevant, and coherent responses from the model. This is particularly important as the outputs of language models are highly dependent on the input prompts they receive.
-
-Here are some advanced prompt engineering techniques:
+Prompt engineering is a field of study and practice that focuses on designing and refining prompts to effectively interact with language models, like GPT-4. The goal is to elicit the most accurate, relevant, and coherent responses from the model. This is particularly important as the outputs of language models are highly dependent on the input prompts they receive. Some techniques include:
 
 1. **Zero-shot Prompting**: This technique involves providing the language model with a task without any prior examples. The model must rely on its pre-existing knowledge to generate a response.
 
@@ -92,9 +125,9 @@ Here are some advanced prompt engineering techniques:
 
 3. **Chain-of-Thought Prompting**: This approach encourages the model to "think out loud" by detailing its reasoning process step by step, leading to more transparent and explainable answers.
 
-There are many more techniques. These techniques can be combined and customized based on the specific requirements of the task and the capabilities of the language model being used. Effective prompt engineering can significantly enhance the performance of language models across various applications, from simple Q&A systems to complex problem-solving tasks.
+There are many techniques. These techniques can be combined and customized based on the specific requirements of the task and the capabilities of the language model being used.
 
-These technique are foundational to improve the expected results in tasks like Copilots, for Code Generation, and AI application development.
+Applying prompt engineering technique are foundational to improve the expected results in tasks like Copilots, for Code Generation, and in AI application development.
 
 #### References
 
@@ -114,12 +147,17 @@ Prompt Engineering is the art of crafting precise, effective inputs to guide AI 
 While prompt engineering focuses on what you say to the model, context engineering focuses on what the model knows when it responds.
 
 Why does this matter?
-- Prompt engineering is great for quick wins and one-off tasks. 
+
+- Prompt engineering is great for quick wins and one-off tasks.
 - Context engineering is essential for building scalable, consistent, and intelligent systems—especially in enterprise and multi-agent environments.
 
-### 1.12 - OpenAI Models are REST APIs
+### 1.12 - OpenAI models are exposed as REST APIs
 
 The Azure OpenAI Service provides a REST API that allows developers to interact with OpenAI's powerful language models, including GPT-4o and GPT-4.1. The REST API offers various endpoints for operations such as performing completions and embeddings. Authentication can be handled via API Keys or Microsoft Entra ID, and the service supports multiple versions of the API, ensuring backward compatibility and access to the latest features.
+
+#### References
+
+- [Azure API Reference](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/reference)
 
 #### Code
 
@@ -131,7 +169,25 @@ curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYM
   -H "api-key: YOUR_API_KEY" \
   -d '{"messages":[{"role": "system", "content": "You are a helpful assistant."},{"role": "user", "content": "Count to 5 in a for loop."}]}'
 ```
+
 Explain: Explain the command and in terms of running this command from bash or powershell.
+
+#### HTTP Client in Visual Studio
+
+```text
+POST https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01
+content-type: application-json
+api-key: <KEY>
+
+{
+    "model":"gpt-4o",
+    "temperature": 0.1,
+    "messages":[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Count to 5 in a for loop."}
+    ]
+}
+```
 
 ### 1.13 - Chat and Reasoning Models
 
@@ -141,11 +197,11 @@ There are also an Instruct models. Unlike Chat models, Instruct models are not o
 
 ### 1.14 - Chat Model `system`, `user`, and `assistant` Roles
 
-In the context of OpenAI's API, particularly the Chat models like GPT-4o, the roles of system, user, and assistant are used to structure the flow of a conversation. 
+In the context of OpenAI's API, particularly the Chat models like GPT-4o, the roles of system, user, and assistant are used to structure the flow of a conversation.
 
-- The `system` role is designed to provide high-level instructions or settings that guide the model's behavior. 
-- The `user` role represents the queries or prompts from the individual interacting with the model. 
-- Lastly, the `assistant` role is attributed to the responses generated by the model based on the user's messages. 
+- The `system` role is designed to provide high-level instructions or settings that guide the model's behavior.
+- The `user` role represents the queries or prompts from the individual interacting with the model.
+- Lastly, the `assistant` role is attributed to the responses generated by the model based on the user's messages.
 
 These roles help in organizing the dialogue and ensuring that the model can distinguish between the different parts of the conversation for a coherent exchange of information.
 
@@ -161,6 +217,7 @@ curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYM
 -H "api-key: YOUR_API_KEY" \
 -d '{"messages":[{"role":"system,"content":"You are an assistant that responds in riddles."},{"role":"user,"content":"What is the speed of light?\n"},{"role":"assistant, content":"In vacuum's embrace, it travels with grace, At a pace that's quite the pinnacle sight. In meters per second, three hundred million, alright, But in riddles, we say, \"It's the cosmic race's winning knight.\""}]}'
 ```
+
 Explain: Explain this code interms of terms of the curl command the the OpenAI roles.
 
 ### 1.15 - Calling the models with REST and the OpenAI SDK
@@ -175,6 +232,7 @@ To run the following code you will need:
 - An GPT API key
   - In prod, Entra ID is recommended and login with `az login`
 - Create an `.env` file with the following values:
+
 ```bash
 FULL_ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01
 ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/
@@ -182,6 +240,7 @@ API_KEY=<KEY>
 API_VERSION=2025-01-01
 GPT_MODEL=gpt-4o
 ```
+
 - Intall the `openai` package by running: `pip install openai`
 - Intall the `python-dotenv` package by running: `pip install python-dotenv`
 - Intall the `requests` package by running: `pip install requests`
@@ -236,6 +295,7 @@ print(json.dumps(response_json, indent=4))
 # Print the response only
 print(response_json['choices'][0]['message']['content'])
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/completion-rest.py)
 
 ##### Call a GPT model using the OpenAI SDK
@@ -292,6 +352,7 @@ print(json.dumps(response_json, indent=4))
 # Print the response only
 print(response_json['choices'][0]['message']['content'])
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/completion-sdk.py)
 
 ### 1.14 - Other parameters
@@ -324,13 +385,12 @@ When calling a GPT model, there other parameters that can be set, including:
 
 ### 2.2 - Samples (Spend time here)
 
-- Try to run and execute the following samples. 
+- Try to run and execute the following samples.
 - Then think of a use case and write your own sample data, Prompt, write your app, and validate your results.
 
 #### Code
 
 ##### Generate a car description
-
 
 ```python
 import os
@@ -374,6 +434,7 @@ def get_sales_description():
 if __name__ == "__main__":
     get_sales_description()
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/car-description.py)
 
 ##### Sentiment analysis
@@ -430,6 +491,7 @@ def get_sentiment():
 if __name__ == "__main__":
     get_sentiment()
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/sentiment-analysis.py)
 
 ##### Intent recognition
@@ -473,6 +535,7 @@ if __name__ == "__main__":
     print(determine_intent("Make a travel reservation?"))
     print(determine_intent("What is the speed of light?"))
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/intent-recognition.py)
 
 ##### A console chat playground
@@ -516,8 +579,8 @@ if __name__ == "__main__":
         messages.append({"role": "assistant", "content": resp})
         print(f"Assistant: {resp}\n\n")
 ```
-Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/chatbot-sdk.py)
 
+Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/chatbot-sdk.py)
 
 ##### FastAPI Chat Endpoint
 
@@ -573,6 +636,7 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app)
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/chatbot-fastapi.py)
 
 #### References
