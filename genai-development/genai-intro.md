@@ -579,3 +579,81 @@ Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/
 
 - [OpenAI Samples](https://platform.openai.com/docs/examples)
 - [Azure Sample](https://learn.microsoft.com/en-us/azure/ai-services/openai/quickstart?tabs=command-line%2Cpython-new&pivots=programming-language-python)
+
+### 2.3 - Function calling
+
+Function Calling is a powerful capability in Azure OpenAI (and OpenAI's GPT models more broadly) that allows the model to invoke external functions based on user input. Instead of just generating text, the model can recognize when a task requires structured data or an external action, and then call a predefined function with the appropriate arguments. Function calling is a key concept in today's Agent based systems.
+
+#### Code
+
+##### Simple function calling example
+
+```python
+import openai
+import os
+import json
+
+# Azure OpenAI configuration
+load_dotenv()
+endpoint = os.getenv("ENDPOINT")
+api_key = os.getenv("API_KEY")
+api_version = os.getenv("API_VERSION")
+model = os.getenv("GPT_MODEL")
+
+# Define the function schema
+functions = [
+    {
+        "name": "get_weather",
+        "description": "Get the current weather in a given location",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The city and state, e.g. Miami, FL"
+                }
+            },
+            "required": ["location"]
+        }
+    }
+]
+
+# Simulate the function implementation
+def get_weather(location):
+    return {
+        "location": location,
+        "temperature": "88°F",
+        "condition": "Sunny"
+    }
+
+# Chat completion with function calling
+response = openai.ChatCompletion.create(
+    model=model,
+    messages=[
+        {"role": "user", "content": "What's the weather like in New York?"}
+    ],
+    functions=functions,
+    function_call="auto"
+)
+
+# Check if the model wants to call a function
+if response.choices[0].finish_reason == "function_call":
+    function_name = response.choices[0].message["function_call"]["name"]
+    arguments = json.loads(response.choices[0].message["function_call"]["arguments"])
+
+    # Call the function
+    if function_name == "get_weather":
+        result = get_weather(**arguments)
+
+        # Send the result back to the model
+        follow_up = openai.ChatCompletion.create(
+            model=model,
+            messages=[
+                {"role": "user", "content": "What's the weather like in Miami?"},
+                response.choices[0].message,
+                {"role": "function", "name": function_name, "content": json.dumps(result)}
+            ]
+        )
+
+        print(follow_up.choices[0].message["content"])
+```
