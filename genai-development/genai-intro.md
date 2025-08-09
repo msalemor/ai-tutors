@@ -54,11 +54,15 @@ Rather than being designed for a single purpose, foundational models like GPT-4 
 
 This foundational nature makes them incredibly cost-effective and powerful, as one pre-trained model can be the basis for hundreds of different AI applications, democratizing access to advanced AI capabilities across industries and use cases.
 
-### 1.5 - Inference
+### 1.5 - What is inference?
 
 Inference in the context of large language models refers to the process of using a pre-trained model to generate predictions, responses, or outputs based on new input data that the model hasn't seen during training. During inference, the model applies the patterns, knowledge, and relationships it learned during training to process your prompt or query and produce a relevant response, whether that's answering a question, generating text, writing code, or performing any other task within its capabilities.
 
 This is the "thinking" phase where the model uses its billions of parameters to calculate probabilities and select the most appropriate tokens to generate, transforming your input into meaningful output. Inference is distinct from training (where the model learns from data) and represents the operational phase where the model is actively being used to provide value, making it the core process that powers all interactions with AI services like those available through Azure OpenAI, and it's during inference that costs are incurred based on token consumption and computational resources used.
+
+#### References
+
+- [Inference visualization](https://bbycroft.net/llm)
 
 ### 1.6 - OpenAI models in Azure AI Foundry
 
@@ -92,10 +96,6 @@ When deploying an OpenAI model in Azure, administrators must configure a tokens-
 - **Design user experiences** that keep users engaged while waiting for completions.
 - **Follow responsible AI best practices** to ensure ethical and safe use of the models.
 
-#### References
-
-- [Inference visualization](https://bbycroft.net/llm)
-
 ### 1.9 - Prompt and Completion
 
 A **prompt** is the input text or instruction that you provide to a large language model to initiate a conversation or request a specific task, serving as the starting point for the model's response generation. Prompts can range from simple questions like "What is the capital of France?" to complex instructions that include context, examples, formatting requirements, and specific guidelines for how the model should respond. The quality and structure of your prompt significantly influences the model's output, making prompt engineering a crucial skill for getting optimal results from AI systems.
@@ -117,7 +117,7 @@ Sample completion:
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "The capital of France is Paris. It's the largest city in France and serves as the country's political, economic, and cultural center.",
+        "content": "Some Azure compute services include: Azure Virtual Machines, Azure App Service, and Azure Kubernetes service",
         "refusal": null
       },
       "logprobs": null,
@@ -187,7 +187,7 @@ Azure OpenAI Service exposes its language models, such as GPT-4o and GPT-4.1, th
 curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01-preview \
   -H "Content-Type: application/json" \
   -H "api-key: YOUR_API_KEY" \
-  -d '{"messages":[{"role": "system", "content": "You are a helpful assistant."},{"role": "user", "content": "Count to 5 in a for loop."}]}'
+  -d '{"messages":[{"role": "system", "content": "You are a helpful assistant."},{"role": "user", "content": "What are some Azure Compute services?"}]}'
 ```
 
 Explain: Explain the command and in terms of running this command from bash or powershell.
@@ -204,7 +204,7 @@ api-key: <KEY>
     "temperature": 0.1,
     "messages":[
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "What is the capital of France?"}
+        {"role": "user", "content": "What are some Azure compute services?"}
     ]
 }
 ```
@@ -227,7 +227,7 @@ In OpenAI's Chat API (such as GPT-4o), each message in a conversation is assigne
 
 Using these roles helps structure the conversation, allowing the model to distinguish between instructions, user input, and its own replies for more coherent and context-aware interactions.
 
-> **Note:** The `system` role is optional but highly recommended for consistent and predictable model behavior. It is especially important in agent-based systems, where each agent may have a distinct function or responsibility.
+> **Note:** The `system` role is "optional" but highly recommended for consistent and predictable model behavior. It is especially important in agent-based systems, where each agent may have a distinct function or responsibility.
 
 ### 1.15 - Managing the chat history
 
@@ -267,7 +267,7 @@ By thoughtfully managing chat history, you can optimize costs, maintain high thr
 curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01 \
 -H "Content-Type: application/json" \
 -H "api-key: YOUR_API_KEY" \
--d '{"messages":[{"role":"system,"content":"You are an assistant that responds in riddles."},{"role":"user,"content":"What is the speed of light?\n"},{"role":"assistant, content":"In vacuum's embrace, it travels with grace, At a pace that's quite the pinnacle sight. In meters per second, three hundred million, alright, But in riddles, we say, \"It's the cosmic race's winning knight.\""}]}'
+-d '{"messages":[{"role":"system,"content":"You are an assistant that responds in riddles."},{"role":"user,"content":"What are some Azure Compute service?\n"},{"role":"assistant, content":"Some Azure compute services include: Azure Virtual Machines, Azure App Service, and Azure Kubernetes Service."}]}'
 ```
 
 Explain: Explain this code in terms of the curl command the the OpenAI roles.
@@ -322,7 +322,7 @@ async def completion(input: str, temperature: float = 0.1) -> dict:
 
 
 async def main():
-    response_json = await completion("What is the speed of light?")
+    response_json = await completion("What are some Azure compute services?")
     print(json.dumps(response_json, indent=4))
     print(response_json["choices"][0]["message"]["content"])
 
@@ -371,7 +371,7 @@ async def completion(input: str, temperature: float = 0.1) -> tuple[dict, str]:
 
 # Set the prompt and other parameters
 async def main():
-    full, response = await completion("What is the speed of light?")
+    full, response = await completion("What are some Azure Compute services?")
     print(json.dumps(full, indent=4))
     print(response)
 
@@ -384,7 +384,7 @@ Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/
 
 ## 2.0 - Development
 
-### 2.1 - Gen AI Development Rules
+### 2.1 - Gen AI development "rules"
 
 1. Always start in the playground.
 2. It is easy to make a Completion/Embedding REST API call. What is difficult is everything else like getting data from the sources, crafting a prompt, saving or presenting the results, etc.
@@ -430,7 +430,7 @@ async def generate_documents():
         messages=[
             {
                 "role": "system",
-                "content": "You are a technical document writer. The user will provide a topic, and you will write a full technical document.",
+                "content": "You are an expert technical document writer. The user will provide a topic, and you will write a full technical document on the same.",
             },
             {"role": "user", "content": "Prompt engineering"},
         ],
