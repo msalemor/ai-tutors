@@ -31,7 +31,7 @@ API_VERSION=2025-01-01
 GPT_MODEL=gpt-4o
 ```
 
-- Create and Python environment and instanll the following Python packages:
+- Create and Python environment and install the following Python packages:
   - `pip install openai python-dotenv httpx azure-identity fastapi uvicorn[standard]`
 
 > **Note:** To get the full OpenAI endpoint, in AI Foundry click on the model, and copy the full endpoint which has the following format: `https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01`
