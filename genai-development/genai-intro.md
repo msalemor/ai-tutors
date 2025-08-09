@@ -147,7 +147,7 @@ Prompt engineering is a field of study and practice that focuses on designing an
 2. **Few-shot Prompting**: Unlike zero-shot, few-shot prompting provides the model with a few examples of the task at hand, helping it understand the context and desired output format better.
 3. **Chain-of-Thought Prompting**: This approach encourages the model to "think out loud" by detailing its reasoning process step by step, leading to more transparent and explainable answers.
 
-There are many techniques. These techniques can be combined and customized based on the specific requirements of the task and the capabilities of the language model being used. If you are developer, you may think of prompts as program that has inputs, carries out semantic instructions and rules, and outputs the results in the requested format with samples of the outputs if necessary. Thinking of prompts this way may help you craft more powerful prompts for productivity and for your applications.
+There are many techniques. These techniques can be combined and customized based on the specific requirements of the task and the capabilities of the language model being used. If you are developer, you may think of a prompt as program that has inputs, carries out semantic instructions and applies rules, and outputs the results in the requested format with samples of the outputs if necessary. Thinking of prompts this way may help you craft more powerful prompts for productivity and for your applications.
 
 #### References
 
@@ -163,6 +163,7 @@ Prompt Engineering is the art of crafting precise, effective inputs to guide AI 
 - Managing long-term vs. short-term context
 - Curating relevant data and metadata
 - Orchestrating multi-agent collaboration
+- Validating the results
 
 While prompt engineering focuses on what you say to the model, context engineering focuses on what the model knows when it responds.
 
@@ -171,9 +172,11 @@ Why does this matter?
 - Prompt engineering is great for quick wins and one-off tasks.
 - Context engineering is essential for building scalable, consistent, and intelligent systems—especially in enterprise and multi-agent environments.
 
-### 1.12 - OpenAI models are exposed as REST APIs
+### 1.12 - OpenAI models are RESTful APIs
 
-Azure OpenAI Service exposes its language models, such as GPT-4o and GPT-4.1, through a REST API. This API enables developers to perform tasks like text completions and embeddings by sending HTTP requests to specific endpoints. Authentication is supported via API keys or Microsoft Entra ID. Multiple API versions are available, allowing you to choose the latest features or maintain compatibility with existing applications.
+Azure OpenAI Service exposes its language models, such as GPT-4o and GPT-4.1, through a REST API. This API enables developers to perform tasks like text completions and embeddings by sending HTTP requests to specific endpoints. Authentication is supported via API keys or Microsoft Entra ID.
+
+The key to developing complex GenAI applications in understanding the RESTful nature of these models and applying REST API development best practices, combined with the business logic to achieve the desired results.
 
 #### References
 
