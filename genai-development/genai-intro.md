@@ -195,7 +195,7 @@ curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYM
 
 Explain: Explain the command and in terms of running this command from bash or powershell.
 
-#### HTTP Client in Visual Studio
+#### POST using the HTTP REST Client in Visual Studio Code
 
 ```text
 POST https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01-preview
