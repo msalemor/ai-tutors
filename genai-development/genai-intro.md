@@ -6,12 +6,35 @@
 
 This document provides a comprehensive introduction to foundational concepts and practical techniques for developing applications with Generative AI, focusing on Large Language Models (LLMs) such as those available through Azure OpenAI. It covers essential topics including what LLMs are, why they are considered foundational models, tokenization and cost management, prompt and context engineering, REST API usage, and the differences between chat, reasoning, and instruct models. The guide also includes hands-on code samples for making API calls, prompt engineering, sentiment analysis, intent recognition, and building chatbots using Python and FastAPI. Additionally, it introduces advanced features like function calling, offering both conceptual explanations and practical examples to help developers effectively leverage generative AI in real-world applications.
 
-### 1.2 - Requirements and recommendations
+### 1.2 - Requirements and environment setup
+
+Requirements:
 
 - Access to an Azure OpenAI GPT models.
 - If you plan to test and run the provided code:
   - experience setting up a Python development environment and installing Python packages.
   - Intermediate development knowledge; specially calling REST APIs.
+
+Environment setup:
+
+- A GPT-4o or GPT-4.1 model deployed in Azure
+- An GPT API key
+  - In prod, Entra ID is recommended and login with `az login`
+- Create a python environment
+- Create an `.env` file with the following values:
+
+```bash
+FULL_ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01
+ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/
+API_KEY=<KEY>
+API_VERSION=2025-01-01
+GPT_MODEL=gpt-4o
+```
+
+- Create and Python environment and instanll the following Python packages:
+  - `pip install openai python-dotenv httpx azure-identity fastapi uvicorn[standard]`
+
+> **Note:** To get the full OpenAI endpoint, in AI Foundry click on the model, and copy the full endpoint which has the following format: `https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01`
 
 #### References
 
@@ -205,7 +228,7 @@ In the context of OpenAI's API, particularly the Chat models like GPT-4o, the ro
 
 These roles help in organizing the dialogue and ensuring that the model can distinguish between the different parts of the conversation for a coherent exchange of information.
 
-**Note:** setting the `system role` is particulalry important in Agent based systems where each Agent may be resposible for unique task.
+**Note:** setting the `system role` is not required. However, it is recommended to set a system role to drive a more preditable behavior. Also, setting the `system role` is particulalry important in Agent based systems where each Agent may be resposible for unique task.
 
 #### Code
 
@@ -226,78 +249,43 @@ As stated above, OpenAI models are REST APIs. The models can be called from any 
 
 The OpenAI Python SDK is a powerful tool that allows developers to interact with the OpenAI API using Python. It supports Python 3.9 and higher, providing both synchronous and asynchronous clients. The SDK is designed to be easy to install and use, with type definitions for all request parameters and response fields. It's particularly useful for tasks such as creating chat completions, polling for asynchronous actions, and bulk uploading files to vector stores.
 
-To run the following code you will need:
-
-- A GPT-4o or GPT-4.1 model deployed in Azure
-- An GPT API key
-  - In prod, Entra ID is recommended and login with `az login`
-- Create a python environment
-- Create an `.env` file with the following values:
-
-```bash
-FULL_ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01
-ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/
-API_KEY=<KEY>
-API_VERSION=2025-01-01
-GPT_MODEL=gpt-4o
-```
-
-- Create and Python environment and instanll the following Python packages:
-  - `pip install openai python-dotenv requests azure-identity fastapi uvicorn[standard]`
-
-> **Note:** Python-Dotenv is a package that lets you read you environment variables from the environment or a `.env` file. If you do create an `.env` file it should contain the environement variables above.
-> **Note:** To get the full OpenAI endpoint, in AI Foundry click on the model, and copy the full endpoint which has the following format: `https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-02-01`
-
 #### Code
 
 ##### Call a GPT model using REST
 
 ```python
-import requests
+import httpx
 import os
 import json
+import asyncio
 from dotenv import load_dotenv
 
 load_dotenv()
-# Full endpoint format:
-#   https://<NAME>.openai.azure.com/openai/deployments/<MODEL>/chat/completions?api-version=2024-02-15-preview
-# os.getenv("FULL_ENDPOINT")
 full_endpoint = os.getenv("FULL_ENDPOINT")
 api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION") or "2024-05-01-preview"
 
-# Set the headers and authentication
-headers = {
-    "Content-Type": "application/json",
-    "api-key": api_key
-}
+headers = {"Content-Type": "application/json", "api-key": api_key}
 
 
-def completion(input: str, temperature: float = 0.1) -> dict:
-    # Construct the request payload
+async def completion(input: str, temperature: float = 0.1) -> dict:
     payload = {
-        "messages": [
-            {
-                "role": "user",
-                "content": input
-            }
-        ],
-        "temperature": temperature
+        "messages": [{"role": "user", "content": input}],
+        "temperature": temperature,
     }
-    # Make the REST call
-    response = requests.post(full_endpoint, headers=headers, json=payload)
-    # Get the response JSON
-    return response.json()
+    async with httpx.AsyncClient() as client:
+        response = await client.post(full_endpoint, headers=headers, json=payload)
+        return response.json()
 
 
-# Set the prompt and other parameters
-response_json = completion("What is the speed of light?")
+async def main():
+    response_json = await completion("What is the speed of light?")
+    print(json.dumps(response_json, indent=4))
+    print(response_json["choices"][0]["message"]["content"])
 
-# Print the full JSON response
-print(json.dumps(response_json, indent=4))
 
-# Print the response only
-print(response_json['choices'][0]['message']['content'])
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/completion-rest.py)
@@ -307,8 +295,9 @@ Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/
 ```python
 import os
 import json
+import asyncio
 from dotenv import load_dotenv
-from openai import AzureOpenAI
+from openai import AsyncAzureOpenAI
 
 # Load the environment variables
 load_dotenv()
@@ -317,14 +306,15 @@ api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION")
 model = os.getenv("GPT_MODEL")
 
-# Create the client
-client = AzureOpenAI(azure_endpoint=endpoint, api_key=api_key, api_version=api_version)
+# Create the async client
+client = AsyncAzureOpenAI(
+    azure_endpoint=endpoint, api_key=api_key, api_version=api_version
+)
+
 
 # Make a completion request
-
-
-def completion(input: str, temperature: float = 0.1) -> tuple[dict, str]:
-    completion = client.chat.completions.create(
+async def completion(input: str, temperature: float = 0.1) -> tuple[dict, str]:
+    completion = await client.chat.completions.create(
         model=model,
         messages=[
             {
@@ -337,13 +327,14 @@ def completion(input: str, temperature: float = 0.1) -> tuple[dict, str]:
 
 
 # Set the prompt and other parameters
-(full, response) = completion("What is the speed of light?")
+async def main():
+    full, response = await completion("What is the speed of light?")
+    print(json.dumps(full, indent=4))
+    print(response)
 
-# Print the full JSON response
-print(json.dumps(full, indent=4))
 
-# Print the response only
-print(response)
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/completion-sdk.py)
@@ -383,11 +374,12 @@ When calling a GPT model, there other parameters that can be set, including:
 
 #### Code
 
-##### Generate a car description
+##### Technical document author
 
 ```python
 import os
-from openai import AzureOpenAI
+import asyncio
+from openai import AsyncAzureOpenAI
 from dotenv import load_dotenv
 
 # Load the environment variables
@@ -397,49 +389,41 @@ endpoint = os.getenv("ENDPOINT")
 api_key = os.getenv("API_KEY")
 model = os.getenv("GPT_MODEL")
 
-# Create the client
-client = AzureOpenAI(api_key=api_key,
-                     azure_endpoint=endpoint,
-                     api_version="2024-02-15-preview")
-
-# Define a function to get the car details
+# Create the async client
+client = AsyncAzureOpenAI(
+    api_key=api_key, azure_endpoint=endpoint, api_version="2024-02-15-preview"
+)
 
 
-def mock_get_car_details():
-    return {"make": "Toyota", "model": "Camry", "year": 2018, "color": "blue", "price": 20000}
-
-# Define a function to get the sales description
-
-
-def get_sales_description():
-    car = mock_get_car_details()
-
-    car_str = f"A {car['color']} {car['year']} {car['make']} {car['model']} priced at ${car['price']}."
-
-    response = client.chat.completions.create(
+async def generate_documents():
+    response = await client.chat.completions.create(
         model=model,  # model = "deployment_name".
         messages=[
-            {"role": "system", "content": "You are a helpful assistant that can generate a one paragraph used car sales descriptions."},
-            {"role": "user", "content": car_str}
+            {
+                "role": "system",
+                "content": "You are a technical document writer. The user will provide a topic, and you will write a full technical document.",
+            },
+            {"role": "user", "content": "Prompt engineering"},
         ],
-        temperature=0.5,  # we want it somewhat creative
+        temperature=0.1,  # we want it somewhat creative
     )
 
     print(response.choices[0].message.content)
 
 
 if __name__ == "__main__":
-    get_sales_description()
+    asyncio.run(generate_documents())
 ```
 
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/car-description.py)
 
-##### Sentiment analysis
+##### Risk scoring
 
 ```python
 import os
 import json
-from openai import AzureOpenAI
+import asyncio
+from openai import AsyncAzureOpenAI
 from dotenv import load_dotenv
 
 # Load the environment variables
@@ -449,48 +433,40 @@ api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION")
 model = os.getenv("GPT_MODEL")
 
-# Create the client
-client = AzureOpenAI(api_key=api_key,
-                     azure_endpoint=endpoint,
-                     api_version=api_version)
+# Create the async client
+client = AsyncAzureOpenAI(
+    api_key=api_key, azure_endpoint=endpoint, api_version=api_version
+)
 
 
-# Define a function to get the product comments
-def mock_get_product_comments() -> list[str]:
-    return ["I love this product!",
-            "This product is terrible.",
-            "This product is okay."]
+def get_mock_document() -> str:
+    return """
+    Incident Summary:
+    On June 12, 2024, at approximately 09:15 UTC, monitoring systems observed an unusual increase in inbound network traffic targeting public-facing web services. Telemetry data showed a higher than normal volume of requests from a diverse set of IP addresses. The traffic pattern is atypical. Investigation is ongoing to determine the nature and intent of the observed behavior, and precautionary monitoring measures have been implemented.
+"""
 
 
-def get_sentiment_score(comment: str) -> float:
-    response = client.chat.completions.create(
-        model=model,  # model = "deployment_name".
+async def evaluate(content: str) -> float:
+    response = await client.chat.completions.create(
+        model=model,
         messages=[
-            {"role": "system", "content": "You are a helpful assistant that can perform sentiment analysis. Analyze the sentiment and provide a score from 0 to 10 with 10 being best.\nNo prologue. Respond in the following JSON format:\n{\"score\": }."},
-            {"role": "user", "content": comment}
+            {
+                "role": "system",
+                "content": 'You are a risk assessment evaluator. The user will provide a summary of the condition(s) and you need to evaluate the risk level. Provide a score from 0 to 1 with 1 indicating a risky condition.\nNo prologue. Respond in the following JSON format:\n{"score":"","reason":"" }.',
+            },
+            {"role": "user", "content": content},
         ],
         temperature=0.1,
+        response_format={"type": "json_object"},
     )
-    json_respond = response.choices[0].message.content
-    print(json_respond)
-    sentiment = json.loads(json_respond)
-    return float(sentiment["score"])
-
-
-def get_sentiment():
-    comments = mock_get_product_comments()
-    total = 0.0
-    for comment in comments:
-        total += get_sentiment_score(comment)
-    print(f"Average sentiment score: {total / len(comments)}")
+    return response.choices[0].message.content
 
 
 if __name__ == "__main__":
-    get_sentiment()
-
+    print(asyncio.run(evaluate(get_mock_document())))
 ```
 
-Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/sentiment-analysis.py)
+Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/risk-scoring.py)
 
 ##### Intent recognition
 
@@ -508,17 +484,18 @@ api_version = os.getenv("API_VERSION")
 model = os.getenv("GPT_MODEL")
 
 # Create the client
-client = AzureOpenAI(api_key=api_key,
-                     azure_endpoint=endpoint,
-                     api_version=api_version)
+client = AzureOpenAI(api_key=api_key, azure_endpoint=endpoint, api_version=api_version)
 
 
 def determine_intent(intent_statement: str):
     response = client.chat.completions.create(
         model=model,  # model = "deployment_name".
         messages=[
-            {"role": "system", "content": "You are a helpful assistant that can perform determine intent from the following list of intents:\n- WeatherIntent: A user asks a question about the weather.\n- ItineraryIntent: A user asks a question about a travel itinerary.\n- ReservationIntent: A user asks a question about making a reservation.\n- OtherIntent: User asks a question about anything else.\n\nNo prologue. Respond in the following JSON format:\n{\"intent\": }."},
-            {"role": "user", "content": intent_statement}
+            {
+                "role": "system",
+                "content": 'You are a helpful assistant that can determine the best intent from the following list of intents:\n- WeatherIntent: A user asks a question about the weather.\n- ItineraryIntent: A user asks a question about a travel itinerary.\n- ReservationIntent: A user asks a question about making a reservation.\n- OtherIntent: User asks a question about anything else.\n\nNo prologue. Respond in the following JSON format:\n{"intent": }.',
+            },
+            {"role": "user", "content": intent_statement},
         ],
         temperature=0.1,
     )
@@ -542,10 +519,11 @@ Code: [basic.py](https://github.com)
 
 ```python
 import os
-from openai import AzureOpenAI
+import asyncio
+from openai import AsyncAzureOpenAI
 import dotenv
 
-# Read the enviroment variables
+# Read the environment variables
 dotenv.load_dotenv()
 
 endpoint = os.getenv("ENDPOINT")
@@ -553,29 +531,30 @@ api_key = os.getenv("API_KEY")
 model = os.getenv("GPT_MODEL")
 api_version = os.getenv("API_VERSION")
 
-client = AzureOpenAI(api_key=api_key,
-                     azure_endpoint=endpoint,
-                     api_version=api_version)
+client = AsyncAzureOpenAI(
+    api_key=api_key, azure_endpoint=endpoint, api_version=api_version
+)
 
-if __name__ == "__main__":
+
+async def main():
     messages = []
     while True:
-        # Get the user input
         user_input = input("You (type 'exit' to break): ")
         if user_input == "exit":
             break
-        # Add the user input to the messages
         messages.append({"role": "user", "content": user_input})
-        # Call GPT with the messages
-        response = client.chat.completions.create(
-            model=model,  # model = "deployment_name".
+        response = await client.chat.completions.create(
+            model=model,
             messages=messages,
-            temperature=0.3,  # less creative
+            temperature=0.3,
         )
-        # Print and add the response to the messages
         resp = response.choices[0].message.content
         messages.append({"role": "assistant", "content": resp})
         print(f"Assistant: {resp}\n\n")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/chatbot-sdk.py)
@@ -586,9 +565,8 @@ Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from openai import AzureOpenAI
+from openai import AsyncAzureOpenAI
 import os
-import openai
 
 # Load the environment variables
 load_dotenv()
@@ -597,10 +575,10 @@ api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION")
 model = os.getenv("GPT_MODEL")
 
-# Create the client
-client = AzureOpenAI(api_key=api_key,
-                     azure_endpoint=endpoint,
-                     api_version=api_version)
+# Create the async client
+client = AsyncAzureOpenAI(
+    api_key=api_key, azure_endpoint=endpoint, api_version=api_version
+)
 
 app = FastAPI()
 
@@ -621,21 +599,21 @@ class CompletionResponse(BaseModel):
 
 
 @app.post("/completion", response_model=CompletionResponse)
-def post_completion(request: PromptRequest):
+async def post_completion(request: PromptRequest):
     if len(request.messages) == 0:
         raise HTTPException(status_code=404, detail="Messages required")
-    response = client.chat.completions.create(
-        model=model,  # model = "deployment_name".
+    response = await client.chat.completions.create(
+        model=model,
         messages=request.messages,
-        temperature=request.temperature,  # less creative
+        temperature=request.temperature,
     )
-    # Print and add the response to the messages
     resp = response.choices[0].message.content
     return CompletionResponse(response=resp)
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app)
 ```
 
@@ -657,7 +635,8 @@ Function Calling is a powerful capability in Azure OpenAI (and OpenAI's GPT mode
 ```python
 import os
 import json
-from openai import AzureOpenAI
+import asyncio
+from openai import AsyncAzureOpenAI
 from dotenv import load_dotenv
 
 # Azure OpenAI configuration
@@ -667,9 +646,10 @@ api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION")
 model = os.getenv("GPT_MODEL")
 
-
-# Create the client
-client = AzureOpenAI(api_key=api_key, azure_endpoint=endpoint, api_version=api_version)
+# Create the async client
+client = AsyncAzureOpenAI(
+    api_key=api_key, azure_endpoint=endpoint, api_version=api_version
+)
 
 # Define the function schema
 functions = [
@@ -681,7 +661,7 @@ functions = [
             "properties": {
                 "location": {
                     "type": "string",
-                    "description": "The city and state, e.g. New York, NY",
+                    "description": "The city and state, e.g. Miami, FL",
                 }
             },
             "required": ["location"],
@@ -691,43 +671,48 @@ functions = [
 
 
 # Simulate the function implementation
-def get_weather(location) -> dict:
+def get_weather(location):
     return {"location": location, "temperature": "88°F", "condition": "Sunny"}
 
 
-# Chat completion with function calling
-response = client.chat.completions.create(
-    model=model,
-    messages=[{"role": "user", "content": "What's the weather like in New York?"}],
-    functions=functions,
-    function_call="auto",
-)
+async def main():
+    # Chat completion with function calling
+    response = await client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": "What's the weather like in New York?"}],
+        functions=functions,
+        function_call="auto",
+    )
 
-# Check if the model wants to call a function
-if response.choices[0].finish_reason == "function_call":
-    function_call = response.choices[0].message.function_call
-    function_name = function_call.name
-    arguments = json.loads(function_call.arguments)
+    # Check if the model wants to call a function
+    if response.choices[0].finish_reason == "function_call":
+        function_call = response.choices[0].message.function_call
+        function_name = function_call.name
+        arguments = json.loads(function_call.arguments)
 
-    # Call the function
-    if function_name == "get_weather":
-        result = get_weather(**arguments)
+        # Call the function
+        if function_name == "get_weather":
+            result = get_weather(**arguments)
 
-        # Send the result back to the model using the same AzureOpenAI client
-        follow_up = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "user", "content": "What's the weather like in New York?"},
-                response.choices[0].message,
-                {
-                    "role": "function",
-                    "name": function_name,
-                    "content": json.dumps(result),
-                },
-            ],
-        )
+            # Send the result back to the model using the same AzureOpenAI client
+            follow_up = await client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "user", "content": "What's the weather like in New York?"},
+                    response.choices[0].message,
+                    {
+                        "role": "function",
+                        "name": function_name,
+                        "content": json.dumps(result),
+                    },
+                ],
+            )
 
-        print(follow_up.choices[0].message.content)
+            print(follow_up.choices[0].message.content)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/function-calling.py)
