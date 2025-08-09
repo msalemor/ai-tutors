@@ -240,7 +240,7 @@ curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYM
 -d '{"messages":[{"role":"system,"content":"You are an assistant that responds in riddles."},{"role":"user,"content":"What is the speed of light?\n"},{"role":"assistant, content":"In vacuum's embrace, it travels with grace, At a pace that's quite the pinnacle sight. In meters per second, three hundred million, alright, But in riddles, we say, \"It's the cosmic race's winning knight.\""}]}'
 ```
 
-Explain: Explain this code interms of terms of the curl command the the OpenAI roles.
+Explain: Explain this code in terms of the curl command the the OpenAI roles.
 
 ### 1.15 - Calling the models with REST and the OpenAI SDK
 
