@@ -9,7 +9,7 @@
 
 ### 1.1 - Chat completion API
 
-Generally, a chat model, like OpenAI GPT4, can keep a conversation history. Calling a model involves passing one or more messages that contain a role and the content. 
+Generally, a chat model, like OpenAI GPT4, can keep a conversation history. Calling a model involves passing one or more messages that contain a role and the content.
 
 A chat model generally implements three roles:
 
@@ -19,7 +19,7 @@ A chat model generally implements three roles:
 
 These roles help the system to understand the structure of the conversation.
 
-Imagine a user is accessing a travel assistant bot and asks, "What are some restaurants in London?" and after receiving the response, the user asks, "what are some more?" How would the system know that the user is refererring to restaurants in London? The answer is in keeping the conversation history which may endup looking something like the code in section 1.1.1.
+Imagine a user is accessing a travel assistant bot and asks, "What are some restaurants in London?" and after receiving the response, the user asks, "what are some more?" How would the system know that the user is referring to restaurants in London? The answer is in keeping the conversation history which may end up looking something like the code in section 1.1.1.
 
 #### Code
 
@@ -89,6 +89,7 @@ user:\What are some good restaurants in London?\nassistant:\n- The Laughing Hall
   }
  ]
 ```
+
 > **Note:** Many Prompt Flow flows use this template technique.
 
 #### References
@@ -117,6 +118,7 @@ trimmer = trim_messages(
     start_on="human",
 )
 ```
+
 Link: [Souce code](https://python.langchain.com/v0.2/docs/tutorials/chatbot/)
 
 ### 1.4 - Console based chatbots
@@ -170,6 +172,7 @@ if __name__ == "__main__":
         messages.append({"role": "assistant", "content": resp})
         print(f"Assistant: {resp}\n\n")
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/chatbot-sdk.py)
 
 ##### 1.4.2 - Chatbot with a template
@@ -225,6 +228,7 @@ if __name__ == "__main__":
         # As the history grows, we should limit the number of messages to keep in the model's context window
         # Refer to this blog: https://blog.pamelafox.org/2024/06/truncating-conversation-history-for.html
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/ollama/chatbot-jinja2.py)
 
 ### 1.5 - UI Based Chatbot Conversation History
@@ -295,6 +299,7 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app)
 ```
+
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/chatbot-fastapi.py)
 
 ##### 1.5.2 - LLM messages trimmer function

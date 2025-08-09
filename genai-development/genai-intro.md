@@ -229,6 +229,36 @@ Using these roles helps structure the conversation, allowing the model to distin
 
 > **Note:** The `system` role is optional but highly recommended for consistent and predictable model behavior. It is especially important in agent-based systems, where each agent may have a distinct function or responsibility.
 
+### 1.15 - Managing the chat history
+
+Managing chat history is crucial when building applications with large language models, especially in chat-based scenarios. The chat history—comprising all previous messages exchanged between the user and the assistant—directly impacts cost, capacity, throughput, and performance:
+
+- **Cost**: Each token in the chat history counts toward your API usage and billing. Longer histories mean more tokens per request, increasing operational costs.
+- **Capacity**: Models have a fixed context window (token limit). If the chat history grows too large, you may exceed this limit, forcing you to truncate or omit important context, which can degrade the quality of responses.
+- **Throughput**: Sending large chat histories increases payload size and processing time, reducing the number of requests your application can handle per minute and potentially causing throttling.
+- **Performance**: Excessive or irrelevant history can confuse the model, leading to less accurate or coherent responses. Efficiently managing history ensures the model focuses on the most relevant context.
+
+Role and content diagram:
+
+```text
+[system]    You are a helpful assistant.
+[user]      What are some compute services in Azure?
+[assistant] Some compute services in Azure include: Virtual Machines, App Service, AKS
+[user]      What are some more?
+[assistant] Other services include: ACI, ACA, Azure Functions
+```
+
+Some techniques for managing chat history include:
+
+- **Truncate old messages**: Keep only the most recent exchanges or those relevant to the current topic. Discard or summarize older messages to stay within token limits.
+- **Summarize history**: Use the model to generate concise summaries of earlier conversation turns, replacing long message chains with a brief recap.
+- **Selective inclusion**: Only include messages that are necessary for the current task or question, omitting unrelated or redundant exchanges.
+- **Windowed context**: Implement a sliding window that maintains a fixed number of recent messages, ensuring the prompt remains within the model’s context window.
+- **External storage**: Store full chat histories outside the prompt (e.g., in a database) and retrieve only the relevant context for each request.
+- **Prompt compression**: Use techniques to compress or encode history, such as removing filler words or using structured formats.
+
+By thoughtfully managing chat history, you can optimize costs, maintain high throughput, and ensure your application delivers fast, accurate, and contextually relevant responses.
+
 #### Code
 
 ##### Curl a GPT endpoint with the `system`, `user`, and `assistant` roles
@@ -242,7 +272,21 @@ curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYM
 
 Explain: Explain this code in terms of the curl command the the OpenAI roles.
 
-### 1.15 - Calling the models with REST and the OpenAI SDK
+### 1.16 - Other model parameters
+
+When calling a GPT model, there other parameters that can be set, including:
+
+- **`temperature`**: This controls the randomness of the output. A lower temperature means the model is more likely to generate predictable text, while a higher temperature encourages more creativity and diversity in the responses.
+- **`max_tokens`**: This sets the maximum length of the generated response. The model will not produce more tokens than the specified limit, ensuring that the output is within a manageable size.
+- **`top_p`**: This parameter, also known as nucleus sampling, controls the diversity of the generated responses by focusing on the most probable next words. A smaller value for top P increases the likelihood that the model will choose a more common word.
+- **`frequency_penalty`**: This reduces the model's tendency to repeat the same line of thought, encouraging it to introduce new concepts and ideas into the conversation.
+- **`presense_penalty`**: This discourages the model from repeating the same words and phrases, promoting a more varied vocabulary in the output.
+- **`stop`**: These are specified sequences of tokens at which the model will stop generating further tokens. This can be useful for signaling the end of a message or segment.
+- **`stream`**: Set a streamed response. Default is `false`.
+
+> **Note:** setting the max tokens may improve your models ability to handle multiple requests. The model uses this information to optimize the overall capacity. If you know the expected token size, it may be a very good idea to set it.
+
+### 1.17 - Calling the models with REST and the OpenAI SDK
 
 OpenAI models are accessed via REST APIs, meaning you can call them from any application capable of making HTTP POST requests. This is especially useful when working in languages or environments that do not have a dedicated SDK.
 
@@ -337,20 +381,6 @@ if __name__ == "__main__":
 ```
 
 Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/basic/completion-sdk.py)
-
-### 1.14 - Other parameters
-
-When calling a GPT model, there other parameters that can be set, including:
-
-- **`temperature`**: This controls the randomness of the output. A lower temperature means the model is more likely to generate predictable text, while a higher temperature encourages more creativity and diversity in the responses.
-- **`max_tokens`**: This sets the maximum length of the generated response. The model will not produce more tokens than the specified limit, ensuring that the output is within a manageable size.
-- **`top_p`**: This parameter, also known as nucleus sampling, controls the diversity of the generated responses by focusing on the most probable next words. A smaller value for top P increases the likelihood that the model will choose a more common word.
-- **`frequency_penalty`**: This reduces the model's tendency to repeat the same line of thought, encouraging it to introduce new concepts and ideas into the conversation.
-- **`presense_penalty`**: This discourages the model from repeating the same words and phrases, promoting a more varied vocabulary in the output.
-- **`stop`**: These are specified sequences of tokens at which the model will stop generating further tokens. This can be useful for signaling the end of a message or segment.
-- **`stream`**: Set a streamed response. Default is `false`.
-
-> **Note:** setting the max tokens may improve your models ability to handle multiple requests. The model uses this information to optimize the overall capacity. If you know the expected token size, it may be a very good idea to set it.
 
 ## 2.0 - Development
 
