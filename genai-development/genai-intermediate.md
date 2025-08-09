@@ -2,9 +2,9 @@
 
 ## 1.0 - Overview
 
-Embeddings play a crucial role in modern AI architectures, especially in Retrieval-Augmented Generation (RAG) systems. In RAG, embeddings are used to convert unstructured data (such as documents or knowledge bases) into dense vector representations. These vectors enable efficient semantic search and retrieval of relevant information, which can then be combined with generative models to produce more accurate, context-aware, and up-to-date responses. Mastering embeddings is essential for developers aiming to build robust, scalable, and intelligent AI applications that leverage both retrieval and generation capabilities.
-
 ### 1.1 - Objective
+
+Embeddings play a crucial role in modern AI architectures, especially in Retrieval-Augmented Generation (RAG) systems. In RAG, embeddings are used to convert unstructured data (such as documents or knowledge bases) into dense vector representations. These vectors enable efficient semantic search and retrieval of relevant information, which can then be combined with generative models to produce more accurate, context-aware, and up-to-date responses. Mastering embeddings is essential for developers aiming to build robust, scalable, and intelligent AI applications that leverage both retrieval and generation capabilities.
 
 The objective of this document is to equip intermediate-level developers with practical knowledge and skills for building generative AI applications, with a particular emphasis on embeddings, vector representations, vector databases, and similarity search techniques using Azure OpenAI services. Readers will learn how to generate and use embeddings, leverage Azure's vector database solutions, and implement similarity search to enhance AI-driven solutions.
 
@@ -27,6 +27,7 @@ Environment setup:
 
 ```bash
 FULL_ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01
+FULL_EMB_ENDPOINT=https://<NAME>.azure.com/openai/deployments/text-embedding-3-small/embeddings?api-version=2023-05-15
 ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/
 API_KEY=<KEY>
 API_VERSION=2025-01-01
