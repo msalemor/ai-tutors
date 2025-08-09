@@ -54,11 +54,17 @@ Rather than being designed for a single purpose, foundational models like GPT-4 
 
 This foundational nature makes them incredibly cost-effective and powerful, as one pre-trained model can be the basis for hundreds of different AI applications, democratizing access to advanced AI capabilities across industries and use cases.
 
-### 1.5 - OpenAI models in Azure AI Foundry
+### 1.5 - Inference
+
+Inference in the context of large language models refers to the process of using a pre-trained model to generate predictions, responses, or outputs based on new input data that the model hasn't seen during training. During inference, the model applies the patterns, knowledge, and relationships it learned during training to process your prompt or query and produce a relevant response, whether that's answering a question, generating text, writing code, or performing any other task within its capabilities.
+
+This is the "thinking" phase where the model uses its billions of parameters to calculate probabilities and select the most appropriate tokens to generate, transforming your input into meaningful output. Inference is distinct from training (where the model learns from data) and represents the operational phase where the model is actively being used to provide value, making it the core process that powers all interactions with AI services like those available through Azure OpenAI, and it's during inference that costs are incurred based on token consumption and computational resources used.
+
+### 1.6 - OpenAI models in Azure AI Foundry
 
 The Azure OpenAI Service offers a variety of models, including the latest GPT-4o and GPT-4.1, which are multimodal and can handle both text and image inputs. Additionally, there are embeddings models for converting text to numerical vectors, DALL-E 3 for generating images from text, Whisper for transcribing and translating speech, and a Text to Speech model currently in preview. These models are designed to cater to a wide range of applications, from conversational AI to content creation and beyond.
 
-### 1.6 - Tokens, cost and performance
+### 1.7 - Tokens, cost and performance
 
 Tokens are the fundamental units that language models use to process and understand text, representing pieces of words, whole words, or even punctuation marks that the model breaks text into during analysis. In OpenAI models deployed on Azure, a token roughly corresponds to 3-4 characters in English text, meaning that a typical word might be 1-2 tokens, while longer or less common words could be broken into multiple tokens. For example, "hello" might be one token, while "understanding" could be split into "under" and "standing" as separate tokens. The tokenization process varies by language, with some languages like Chinese or Arabic requiring more tokens per character than English, and technical terms, code, or special characters often requiring additional tokens to represent properly.
 
@@ -71,25 +77,20 @@ From a performance perspective, models have token limits (context windows) that 
 - [What are tokens?](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them)
 - [OpenAI Tokenizer - Tool to view tokens](https://platform.openai.com/tokenizer)
 
-### 1.7 - Token limits, throttling, concurrent jobs and retry logic
+### 1.8 - Token limits, throttling, concurrent jobs and retry logic
 
-When an OpenAI model is deployed in Aziure, the administrator has to set a token limit in Tokens per minute. Newer models, like GPT 4.1, can achieve up to 1 million tokens per minute, but even for this model, an AI developer should pay special considerations when designing and building GenAI apps. Some of these are:
+When deploying an OpenAI model in Azure, administrators must configure a tokens-per-minute (TPM) limit. Even with high-throughput models like GPT-4.1 (which can handle up to 1 million TPM), developers need to carefully design their GenAI applications to avoid hitting these limits and ensure reliable performance. Key considerations include:
 
-- Implement retry logic (429 and other HTTP codes)
-- Load balance two or more OpenAI endpoints if needed
-- Be careful with concurrent tasks as they quickly exceed the model TPM limit
-- Manage the conversation window and large prompts
-- Use techniques like prompt compression and prompt caching
-- Try to batch the tasks into one prompt
-  - **Note**: Remember that a prompt can do more than one thing (i.e. summarize the following content and create versions of the summary in English, Spanish and French)
-- Monitor your applications and include SLO
-- Follow responsible AI best practices
-
-### 1.8 - Inference
-
-Inference in the context of large language models refers to the process of using a pre-trained model to generate predictions, responses, or outputs based on new input data that the model hasn't seen during training. During inference, the model applies the patterns, knowledge, and relationships it learned during training to process your prompt or query and produce a relevant response, whether that's answering a question, generating text, writing code, or performing any other task within its capabilities.
-
-This is the "thinking" phase where the model uses its billions of parameters to calculate probabilities and select the most appropriate tokens to generate, transforming your input into meaningful output. Inference is distinct from training (where the model learns from data) and represents the operational phase where the model is actively being used to provide value, making it the core process that powers all interactions with AI services like those available through Azure OpenAI, and it's during inference that costs are incurred based on token consumption and computational resources used.
+- **Implement retry logic** for handling rate limits (HTTP 429) and other transient errors.
+- **Distribute load** across multiple OpenAI endpoints if necessary.
+- **Manage concurrency** to prevent exceeding the TPM limit with parallel tasks.
+- **Optimize prompt size** by managing conversation history and avoiding unnecessarily large prompts.
+- **Use prompt compression and caching** to reduce token usage and improve efficiency.
+- **Batch tasks** into a single prompt when possible.
+  - *Tip:* A single prompt can perform multiple actions (e.g., summarize content and provide translations in English, Spanish, and French).
+- **Monitor application performance** and define service level objectives (SLOs).
+- **Design user experiences** that keep users engaged while waiting for completions.
+- **Follow responsible AI best practices** to ensure ethical and safe use of the models.
 
 #### References
 
@@ -143,9 +144,7 @@ Sample completion:
 Prompt engineering is a field of study and practice that focuses on designing and refining prompts to effectively interact with language models, like GPT-4. The goal is to elicit the most accurate, relevant, and coherent responses from the model. This is particularly important as the outputs of language models are highly dependent on the input prompts they receive. Some techniques include:
 
 1. **Zero-shot Prompting**: This technique involves providing the language model with a task without any prior examples. The model must rely on its pre-existing knowledge to generate a response.
-
 2. **Few-shot Prompting**: Unlike zero-shot, few-shot prompting provides the model with a few examples of the task at hand, helping it understand the context and desired output format better.
-
 3. **Chain-of-Thought Prompting**: This approach encourages the model to "think out loud" by detailing its reasoning process step by step, leading to more transparent and explainable answers.
 
 There are many techniques. These techniques can be combined and customized based on the specific requirements of the task and the capabilities of the language model being used.
@@ -176,7 +175,7 @@ Why does this matter?
 
 ### 1.12 - OpenAI models are exposed as REST APIs
 
-The Azure OpenAI Service provides a REST API that allows developers to interact with OpenAI's powerful language models, including GPT-4o and GPT-4.1. The REST API offers various endpoints for operations such as performing completions and embeddings. Authentication can be handled via API Keys or Microsoft Entra ID, and the service supports multiple versions of the API, ensuring backward compatibility and access to the latest features.
+Azure OpenAI Service exposes its language models, such as GPT-4o and GPT-4.1, through a REST API. This API enables developers to perform tasks like text completions and embeddings by sending HTTP requests to specific endpoints. Authentication is supported via API keys or Microsoft Entra ID. Multiple API versions are available, allowing you to choose the latest features or maintain compatibility with existing applications.
 
 #### References
 
@@ -212,23 +211,25 @@ api-key: <KEY>
 }
 ```
 
-### 1.13 - Chat and Reasoning Models
+### 1.13 - Model types
 
-Chat models are optimized for conversational contexts, aiming to produce natural and engaging dialogue. It is well-suited for scenarios that require a back-and-forth interaction, such as customer service or casual conversation. Reasoning models like o1 and GPT 5 are specifically designed or fine-tuned to perform reasoning tasks—that is, tasks that require logical thinking, inference, problem-solving, or multi-step decision-making. In their completions, these models may return both the reasoning and response data.
+Chat models are designed to generate natural, engaging conversations and are ideal for interactive scenarios like customer support or chatbots, where maintaining context across multiple turns is important.
 
-There are also an Instruct models. Unlike Chat models, Instruct models are not optimized for conversations, but questions and answers where the context does not need to be maintained.
+Reasoning models, such as o1 and GPT-5, are specialized or fine-tuned to handle tasks that require logical thinking, inference, and multi-step problem-solving. These models often provide both their reasoning process and the final answer in their responses.
+
+There are also Instruct models. These models on the other hand, are optimized for direct question-and-answer tasks rather than ongoing conversations. They excel when context does not need to be preserved between interactions.
 
 ### 1.14 - Chat Model `system`, `user`, and `assistant` Roles
 
-In the context of OpenAI's API, particularly the Chat models like GPT-4o, the roles of system, user, and assistant are used to structure the flow of a conversation.
+In OpenAI's Chat API (such as GPT-4o), each message in a conversation is assigned a `role` to clarify its purpose:
 
-- The `system` role is designed to provide high-level instructions or settings that guide the model's behavior.
-- The `user` role represents the queries or prompts from the individual interacting with the model.
-- Lastly, the `assistant` role is attributed to the responses generated by the model based on the user's messages.
+- **`system`**: Sets the overall behavior or persona of the assistant. Use this to provide instructions, context, or constraints that guide how the model should respond.
+- **`user`**: Represents input from the end user—questions, commands, or prompts that drive the conversation.
+- **`assistant`**: Contains the model's responses to the user's messages.
 
-These roles help in organizing the dialogue and ensuring that the model can distinguish between the different parts of the conversation for a coherent exchange of information.
+Using these roles helps structure the conversation, allowing the model to distinguish between instructions, user input, and its own replies for more coherent and context-aware interactions.
 
-**Note:** setting the `system role` is not required. However, it is recommended to set a system role to drive a more preditable behavior. Also, setting the `system role` is particulalry important in Agent based systems where each Agent may be resposible for unique task.
+> **Note:** The `system` role is optional but highly recommended for consistent and predictable model behavior. It is especially important in agent-based systems, where each agent may have a distinct function or responsibility.
 
 #### Code
 
@@ -245,9 +246,9 @@ Explain: Explain this code interms of terms of the curl command the the OpenAI r
 
 ### 1.15 - Calling the models with REST and the OpenAI SDK
 
-As stated above, OpenAI models are REST APIs. The models can be called from any application that can make REST requests using a POST action. Understanding how to calls these models using REST is important in case you work in languages that don't offer SDKs.
+OpenAI models are accessed via REST APIs, meaning you can call them from any application capable of making HTTP POST requests. This is especially useful when working in languages or environments that do not have a dedicated SDK.
 
-The OpenAI Python SDK is a powerful tool that allows developers to interact with the OpenAI API using Python. It supports Python 3.9 and higher, providing both synchronous and asynchronous clients. The SDK is designed to be easy to install and use, with type definitions for all request parameters and response fields. It's particularly useful for tasks such as creating chat completions, polling for asynchronous actions, and bulk uploading files to vector stores.
+For Python developers, the OpenAI Python SDK offers a convenient and robust way to interact with the API. Supporting Python 3.9 and above, the SDK provides both synchronous and asynchronous clients, complete with type definitions for all request parameters and response fields. It simplifies common tasks such as creating chat completions, handling asynchronous operations, and managing bulk file uploads for vector stores.
 
 #### Code
 
@@ -263,7 +264,7 @@ from dotenv import load_dotenv
 load_dotenv()
 full_endpoint = os.getenv("FULL_ENDPOINT")
 api_key = os.getenv("API_KEY")
-api_version = os.getenv("API_VERSION") or "2024-05-01-preview"
+api_version = os.getenv("API_VERSION")
 
 headers = {"Content-Type": "application/json", "api-key": api_key}
 
@@ -626,7 +627,7 @@ Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/
 
 ### 2.3 - Function calling
 
-Function Calling is a powerful capability in Azure OpenAI (and OpenAI's GPT models more broadly) that allows the model to invoke external functions based on user input. Instead of just generating text, the model can recognize when a task requires structured data or an external action, and then call a predefined function with the appropriate arguments. Function calling is a key concept in today's Agent based systems.
+Function Calling is a feature in Azure OpenAI (and OpenAI's GPT models) that enables the model to trigger external functions in response to user input. Rather than only generating text, the model can detect when a request requires structured data or an external operation, and then call a specified function with the necessary arguments. This capability is essential for building agent-based systems, where the model can interact with tools, APIs, or services to complete complex tasks.
 
 #### Code
 
