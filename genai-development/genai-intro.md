@@ -547,7 +547,7 @@ async def main():
         response = await client.chat.completions.create(
             model=model,
             messages=messages,
-            temperature=0.3,
+            temperature=0.1,
         )
         resp = response.choices[0].message.content
         messages.append({"role": "assistant", "content": resp})
