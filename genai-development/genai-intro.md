@@ -272,7 +272,7 @@ curl https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYM
 
 Explain: Explain this code in terms of the curl command the the OpenAI roles.
 
-### 1.16 - Other model parameters
+### 1.16 - Other Chat model parameters
 
 When calling a GPT model, there other parameters that can be set, including:
 
@@ -386,13 +386,13 @@ Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/
 
 ### 2.1 - Gen AI Development Rules
 
-1. It is easy to make a Completion/Embedding REST API call. What is difficult is everything else like getting data from the sources, crafting a Prompt, saving or presenting the results, etc.
-2. Knowing how to Prompt engineer and stuff the Prompt (give context) gets the riches.
-3. Knowing how to manage the tokens helps to keep more riches (cost savings) and process more riches.
-4. It is not so important how the current model training data is, what is important is what these models have learned to do. Gen AI models are foundational models. As such they have learned to solve many foundational problems like summarization, analysis, translation, scoring, intent recognition, etc. You can always provide and act on the latest data by providing it as context.
-5. A prompt can perform one task or multiple tasks. For example, you can ask a prompt to give a summary in English and Spanish. Instead of chaining prompts, consider the Prompt capabilities.
-6. Although Gen AI models are probabilistic and make predictions for the subsequent word during inference, Prompts can be viewed as applications that have the capacity to store variables, manage data, carry out semantic commands, create vectors and act as vector databases, employ vectors for search and comparison tasks, serve as state stores, among other capabilities. Thinking of Prompts this way may lead to achieving the desired outcomes. More advanced Prompt templates may consist of a setup, setting up variables, giving rules or commands, providing input data, providing samples of the expected output, and the expected output format.
-7. Always start in the playground.
+1. Always start in the playground.
+2. It is easy to make a Completion/Embedding REST API call. What is difficult is everything else like getting data from the sources, crafting a prompt, saving or presenting the results, etc.
+3. Knowing how to Prompt engineer and stuff the Prompt (give context) gets the riches.
+4. Knowing how to manage the tokens helps to keep more riches (cost savings) and process more riches.
+5. It is not so important how the current model training data is, what is important is what these models have learned to do. Gen AI models are foundational models. As such they have learned to solve many foundational problems like summarization, analysis, translation, scoring, intent recognition, etc. You can always provide and act on the latest data by providing it as context.
+6. A prompt can perform one task or multiple tasks. For example, you can ask a prompt to give a summary in English and Spanish. Instead of chaining prompts, consider the Prompt capabilities.
+7. Although GenAI models are probabilistic engines that make predictions for the subsequent word during inference, prompts can be viewed as applications that have the capacity to store variables, manage data, carry out semantic commands, create vectors and act as vector databases, employ vectors for search and comparison tasks, serve as state stores, among other capabilities. Thinking of Prompts this way may lead to achieving the desired outcomes. More advanced Prompt templates may consist of a setup, setting up variables, giving rules or commands, providing input data, providing samples of the expected output, and the expected output format.
 8. Experiment with the Prompts. Think about the input and the data sources (where will will the data come from?). Think about the requested output format and what will you do with the output. Considering output to JSON.
 9. Reading documentation is good. Writing and experimenting with code is key to learning.
 
