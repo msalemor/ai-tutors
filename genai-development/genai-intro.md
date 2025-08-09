@@ -244,11 +244,14 @@ Managing chat history is crucial when building applications with large language 
 Role and content diagram:
 
 ```text
+Role        Content
+=========== ==========================================================================
 [system]    You are a helpful assistant.
 [user]      What are some compute services in Azure?
 [assistant] Some compute services in Azure include: Virtual Machines, App Service, AKS
 [user]      What are some more?
 [assistant] Other services include: ACI, ACA, Azure Functions
+[user]      <next prompt>
 ```
 
 Some techniques for managing chat history include:
