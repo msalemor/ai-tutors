@@ -528,8 +528,8 @@ dotenv.load_dotenv()
 
 endpoint = os.getenv("ENDPOINT")
 api_key = os.getenv("API_KEY")
-model = os.getenv("GPT_MODEL")
 api_version = os.getenv("API_VERSION")
+model = os.getenv("GPT_MODEL")
 
 client = AsyncAzureOpenAI(
     api_key=api_key, azure_endpoint=endpoint, api_version=api_version
