@@ -62,7 +62,7 @@ This is the "thinking" phase where the model uses its billions of parameters to 
 
 ### 1.6 - OpenAI models in Azure AI Foundry
 
-The Azure OpenAI Service offers a variety of models, including the latest GPT-4o and GPT-4.1, which are multimodal and can handle both text and image inputs. Additionally, there are embeddings models for converting text to numerical vectors, DALL-E 3 for generating images from text, Whisper for transcribing and translating speech, and a Text to Speech model currently in preview. These models are designed to cater to a wide range of applications, from conversational AI to content creation and beyond.
+The Azure OpenAI Service offers a variety of models, including the latest GPT-4o and GPT-4.1, which are multi-modal and can handle both text and image inputs. Additionally, there are embeddings models for converting text to numerical vectors, DALL-E 3 for generating images from text, Whisper for transcribing and translating speech, and a Text to Speech model currently in preview. These models are designed to cater to a wide range of applications, from conversational AI to content creation and beyond.
 
 ### 1.7 - Tokens, cost and performance
 
@@ -147,13 +147,11 @@ Prompt engineering is a field of study and practice that focuses on designing an
 2. **Few-shot Prompting**: Unlike zero-shot, few-shot prompting provides the model with a few examples of the task at hand, helping it understand the context and desired output format better.
 3. **Chain-of-Thought Prompting**: This approach encourages the model to "think out loud" by detailing its reasoning process step by step, leading to more transparent and explainable answers.
 
-There are many techniques. These techniques can be combined and customized based on the specific requirements of the task and the capabilities of the language model being used.
-
-Applying prompt engineering technique are foundational to improve the expected results in tasks like Copilots, for Code Generation, and in AI application development.
+There are many techniques. These techniques can be combined and customized based on the specific requirements of the task and the capabilities of the language model being used. If you are developer, you may think of prompts as program that has inputs, carries out semantic instructions and rules, and outputs the results in the requested format with samples of the outputs if necessary. Thinking of prompts this way may help you craft more powerful prompts for productivity and for your applications.
 
 #### References
 
-- [Prompting techniqiues](https://www.promptingguide.ai/techniques)
+- [Prompting techniques](https://www.promptingguide.ai/techniques)
 - [Azure - Prompt Engineering](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions)
 - [OpenAI - Prompt Engineering](https://platform.openai.com/docs/guides/prompt-engineering/prompt-engineering)
 
@@ -365,7 +363,7 @@ When calling a GPT model, there other parameters that can be set, including:
 5. A prompt can perform one task or multiple tasks. For example, you can ask a prompt to give a summary in English and Spanish. Instead of chaining prompts, consider the Prompt capabilities.
 6. Although Gen AI models are probabilistic and make predictions for the subsequent word during inference, Prompts can be viewed as applications that have the capacity to store variables, manage data, carry out semantic commands, create vectors and act as vector databases, employ vectors for search and comparison tasks, serve as state stores, among other capabilities. Thinking of Prompts this way may lead to achieving the desired outcomes. More advanced Prompt templates may consist of a setup, setting up variables, giving rules or commands, providing input data, providing samples of the expected output, and the expected output format.
 7. Always start in the playground.
-8. Experiment with the Prompts. Think about the input and the data sources (where will will the data come from?). Think about the requested output format and what will you do with the output. Considering outputing to JSON.
+8. Experiment with the Prompts. Think about the input and the data sources (where will will the data come from?). Think about the requested output format and what will you do with the output. Considering output to JSON.
 9. Reading documentation is good. Writing and experimenting with code is key to learning.
 
 ### 2.2 - Samples (Spend time here)
