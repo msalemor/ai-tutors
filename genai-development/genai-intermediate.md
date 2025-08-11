@@ -26,13 +26,13 @@ Environment setup:
 - Create an `.env` file with the following values:
 
 ```bash
-FULL_ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2025-01-01
-FULL_EMB_ENDPOINT=https://<NAME>.azure.com/openai/deployments/text-embedding-3-small/embeddings?api-version=2023-05-15
-ENDPOINT=https://YOUR_RESOURCE_NAME.openai.azure.com/
+FULL_ENDPOINT=https://<NAME>.azure.com/openai/deployments/<CHAT_MODEL>/chat/completions?api-version=2025-01-01-preview
+ENDPOINT=https://<NAME>.openai.azure.com/
+EMB_FULL_ENDPOINT=https://<NAME>.openai.azure.com/openai/deployments/<EMBEDDING_MODEL>/embeddings?api-version=2023-05-15
 API_KEY=<KEY>
-API_VERSION=2025-01-01
+API_VERSION=2025-01-01-preview
 GPT_MODEL=gpt-4o
-EMB_MODEL=text-embedding-3-small
+EMB_MODEL=text-embedding-ada-002
 ```
 
 - Create and Python environment and install the following Python packages:
@@ -66,62 +66,87 @@ The embeddings can be resized to a different number of dimensions using the `dim
 ##### 2.2.1 - Calling an Azure OpenAI embedding endpoint using REST
 
 ```python
-import requests
 import os
-from dotenv import load_env
+import asyncio
+import httpx
+from dotenv import load_dotenv
 
 # Read environment variables from .env file or the environment
-load_env()
-full_endpoint = os.getenv("FULL_ENDPOINT")
+load_dotenv()
+emb_full_endpoint = os.getenv("EMB_FULL_ENDPOINT")
 api_key = os.getenv("API_KEY")
 
-headers = {
-        "Content-Type": "application/json",
-        "api-key": api_key
-}
+headers = {"Content-Type": "application/json", "api-key": api_key}
 
-def get_embedding(input:str,model_version=2,dimensions=1536) -> tuple[str,list[float]]:
-    json_data = json_data = {"input": input}
 
+async def get_embedding(
+    input: str, model_version=2, dimensions=1536
+) -> tuple[str, list[float]]:
+    json_data = {"input": input}
     if model_version == 3:
-        json_data = {"input": input,"dimensions":dimensions}    
-        
-    response = requests.post(full_endpoint, 
-                             headers=headers, 
-                             json=json_data)                             
-    response.raise_for_status()
-    res = response.json()
+        json_data = {"input": input, "dimensions": dimensions}
 
-    vector = res['data'][0]['embedding']
-    print(f"Input: {input} Vector size: {len(vector)}")
-    return (input,vector)
+    async with httpx.AsyncClient() as client:
+        response = await client.post(emb_full_endpoint, headers=headers, json=json_data)
+        response.raise_for_status()
+        res = response.json()
 
-print(get_embedding("App Service is on of the most used services in Azure."))
+    vector = res["data"][0]["embedding"]
+    return (input, vector)
+
+
+async def main():
+    (text, emb) = await get_embedding(
+        "App Service is on of the most used services in Azure."
+    )
+    print(f"Input: {text} Vector\n: {emb}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
+
+Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/intermediate/emb-rest.py)
 
 ##### 2.2.2 - Calling an Azure OpenAI embedding endpoint using the OpenAI SDK
 
 ```python
-from openai import AzureOpenAI
+import asyncio
+from openai import AsyncAzureOpenAI
 import os
-from dotenv import load_env
+from dotenv import load_dotenv
 
 # Read environment variables from .env file or the environment
-load_env()
+load_dotenv()
 endpoint = os.getenv("ENDPOINT")
 api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION")
-model = os.getenv("EMB_MODEL") # text-embedding-3-small
+model = os.getenv("EMB_MODEL")  # text-embedding-3-small
 
-client = AzureOpenAI(api_key=api_key,azure_endpoint=endpoint, api_version=api_version)
+client = AsyncAzureOpenAI(
+    api_key=api_key, azure_endpoint=endpoint, api_version=api_version
+)
 
-def get_embedding(text, model=model, dimensions=NOT_GIVEN):
-   text = text.replace("\n", " ")
-   emb = client.embeddings.create(input = [text], model=model, dimensions=dimensions).data[0].embedding
-   return emb
 
-print(get_embedding("App Service is on of the most used services in Azure."))
+async def get_embedding(text, model=model) -> tuple[str, list[float]]:
+    text = text.replace("\n", " ")
+    response = await client.embeddings.create(input=[text], model=model)
+    emb = response.data[0].embedding
+    return (text, emb)
+
+
+async def main():
+    (text, emb) = await get_embedding(
+        "App Service is on of the most used services in Azure."
+    )
+    print(f"Text: {text}\nEmbedding: {emb}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
+
+Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/intermediate/emb-sdk.py)
 
 ### 2.3 - What is a vector databases?
 
@@ -168,18 +193,20 @@ The main use cases of cosine similarity in AI include:
 ```python
 import math
 
-def cosine_similarity(embedding1 : list[float], embedding2: list[float]) -> float:
+
+def cosine_similarity(embedding1: list[float], embedding2: list[float]) -> float:
     # Calculate the dot product of the two embeddings
     dot_product = sum(x * y for x, y in zip(embedding1, embedding2))
 
     # Calculate the magnitudes of the two embeddings
-    magnitude1 = math.sqrt(sum(x ** 2 for x in embedding1))
-    magnitude2 = math.sqrt(sum(x ** 2 for x in embedding2))
+    magnitude1 = math.sqrt(sum(x**2 for x in embedding1))
+    magnitude2 = math.sqrt(sum(x**2 for x in embedding2))
 
     # Calculate the cosine similarity
     similarity = dot_product / (magnitude1 * magnitude2)
 
     return similarity
+
 
 # Example usage:
 embedding1 = [0.1, 0.2, 0.3, 0.4, 0.5]
@@ -195,12 +222,15 @@ similarity = cosine_similarity(embedding1, embedding2)
 print(similarity)
 ```
 
+Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/intermediate/cos-similarity-math.py)
+
 ##### 2.6.2 - Cosine similarity calculation with numpy
 
 ```python
 import numpy as np
 
-def cosine_similarity(embedding1 : list[float], embedding2 : list[float]) -> float:
+
+def cosine_similarity(embedding1: list[float], embedding2: list[float]) -> float:
     # Convert input to NumPy arrays if needed
     embedding1 = np.array(embedding1)
     embedding2 = np.array(embedding2)
@@ -217,6 +247,7 @@ def cosine_similarity(embedding1 : list[float], embedding2 : list[float]) -> flo
 
     return similarity
 
+
 # Example usage:
 embedding1 = [0.1, 0.2, 0.3, 0.4, 0.5]
 embedding2 = [0.6, 0.7, 0.8, 0.9, 1.0]
@@ -231,53 +262,51 @@ similarity = cosine_similarity(embedding1, embedding2)
 print(similarity)
 ```
 
+Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/intermediate/cos-similarity-np.py)
+
 ##### 2.6.3 - Cosine similarity search without a vector database
 
 ```python
 import math
-import requests
+import asyncio
+from openai import AsyncAzureOpenAI
 import os
-from dotenv import load_env
+from dotenv import load_dotenv
 
 # Read environment variables from .env file or the environment
-load_env()
-
-full_endpoint = os.getenv("FULL_ENDPOINT")
-api_key = os.getenv("API_KEY")
-
-headers = {
-        "Content-Type": "application/json",
-        "api-key": api_key
-}
-
-# Read environment variables from .env file or the environment
-load_env()
+load_dotenv()
 endpoint = os.getenv("ENDPOINT")
 api_key = os.getenv("API_KEY")
 api_version = os.getenv("API_VERSION")
-model = os.getenv("EMB_MODEL") # text-embedding-3-small
+model = os.getenv("EMB_MODEL")  # text-embedding-3-small
 
-client = AzureOpenAI(api_key=api_key,azure_endpoint=endpoint, api_version=api_version)
+client = AsyncAzureOpenAI(
+    api_key=api_key, azure_endpoint=endpoint, api_version=api_version
+)
 
-def get_embedding(text, model=model, dimensions=1536) -> tuple[str,list[float]]:
-   text = text.replace("\n", " ")
-   emb = client.embeddings.create(input = [text], model=model, dimensions=dimensions).data[0].embedding
-   return (text,emb)
 
-def cosine_similarity(embedding1 : list[float], embedding2: list[float]) -> float:
+async def get_embedding(text, model=model) -> tuple[str, list[float]]:
+    text = text.replace("\n", " ")
+    response = await client.embeddings.create(input=[text], model=model)
+    emb = response.data[0].embedding
+    return (text, emb)
+
+
+def cosine_similarity(embedding1: list[float], embedding2: list[float]) -> float:
     # Calculate the dot product of the two embeddings
     dot_product = sum(x * y for x, y in zip(embedding1, embedding2))
 
     # Calculate the magnitudes of the two embeddings
-    magnitude1 = math.sqrt(sum(x ** 2 for x in embedding1))
-    magnitude2 = math.sqrt(sum(x ** 2 for x in embedding2))
+    magnitude1 = math.sqrt(sum(x**2 for x in embedding1))
+    magnitude2 = math.sqrt(sum(x**2 for x in embedding2))
 
     # Calculate the cosine similarity
     similarity = dot_product / (magnitude1 * magnitude2)
 
     return similarity
 
-if "__name__"=="__main__":
+
+async def main():
     content = [
         "Azure App Service enables you to host web applications in the cloud.",
         "Azure Functions allows you to run event-driven serverless code.",
@@ -285,25 +314,30 @@ if "__name__"=="__main__":
         "Azure SQL Database is a fully managed relational database service.",
     ]
 
-    ram_vector_database = [get_embedding(c,model,dimension) for c in content]
+    ram_vector_database = [await get_embedding(c) for c in content]
 
-    (content,embedding) = get_embedding("What a PaaS database service in Azure?")
-    print(content)
-    print(embedding)
+    question = "What a PaaS database service in Azure?"
+    (query_content, embedding) = await get_embedding(question)
 
     # Perform near search with relevance and limits
-    limit =3
-    relevance=0.1
+    limit = 3
+    relevance = 0.5
     results_list = []
     for entry in ram_vector_database:
-        (content,entry_embedding) = entry
-        cs = cosine_similarity(e1, entry_embedding)
-        if cs>=relevance:
-            results_list.append((content,cs))
+        (content, entry_embedding) = entry
+        cs = cosine_similarity(embedding, entry_embedding)
+        if cs >= relevance:
+            results_list.append((content, cs))
 
     # print the results
     results_list.sort(key=lambda x: x[1], reverse=True)
     top_n = results_list[:limit]
-    for entry in top_n:
-        print(f"Similarity: {entry[1]}, Content: {entry[0]}")
+    (result, score) = top_n[0]
+    print(f"Question: {question}\nTop result: {result}\nScore: {score}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
+
+Link: [Source code](https://github.com/msalemor/ai-code-blocks/blob/main/python/demos/intermediate/emb-search.py)
