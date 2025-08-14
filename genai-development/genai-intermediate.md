@@ -154,6 +154,10 @@ A vector database is a specialized type of database designed to store, manage, a
 
 > **Tip:** A mature vector database provides a lot of features and functionality, but in simple applications vector could be stored and analyzed from a simple database such a SQLite database.
 
+#### References
+
+- [Video: What is a Vector Database? Powering Semantic Search & AI Applications](https://www.youtube.com/watch?v=gl1r1XV0SLw)
+
 ### 2.4 - What are some vector databases in Azure?
 
 In Azure, there are several services that support vector database functionalities:
