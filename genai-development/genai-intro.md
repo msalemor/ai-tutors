@@ -62,6 +62,7 @@ This is the "thinking" phase where the model uses its billions of parameters to 
 
 #### References
 
+- [Video: AI Inference: The Secret to AI's Superpowers](https://www.youtube.com/watch?v=XtT5i0ZeHHE&t=19s)
 - [Inference visualization](https://bbycroft.net/llm)
 
 ### 1.6 - OpenAI models in Azure AI Foundry
